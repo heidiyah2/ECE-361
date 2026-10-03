@@ -1,3 +1,6 @@
+### test.c
+- Used to figure out how to print uint32_t as hex value.
+
 ### bits.h
 - Used VS Code Chat to populate bits.h with desired protection, libraries, and prototypes.
 

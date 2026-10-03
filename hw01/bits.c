@@ -33,4 +33,16 @@ void print_binary(uint32_t x, int width)
     return;
 }
 
-    
+uint32_t get_field(uint32_t word, int pos, int width) 
+{
+    uint32_t field, mask;
+
+    if (width > 32 || pos > 31 || pos + width > 32 || width == 0)
+        field = 0xFFFFFFFF;
+    else {
+        mask = (1u << width) - 1u;
+        field = (word >> pos) & mask;
+    }
+
+    return field;
+}
