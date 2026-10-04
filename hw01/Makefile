@@ -5,17 +5,20 @@ CFLAGS = -std=c11 -Wall -Wextra
 
 all: test_runner
 
-test_runner: test.o bits.o
+test_runner: tests/test_bits.o bits.o status.o
 	$(CC) $(CFLAGS) -o $@ $^
 
-test.o: test.c bits.h
-	$(CC) $(CFLAGS) -c $< -o $@
+tests/test_bits.o: tests/test_bits.c bits.h status.h
+	$(CC) $(CFLAGS) -I. -c $< -o $@
 
 bits.o: bits.c bits.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+status.o: status.c status.h bits.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 test: test_runner
 	./test_runner
 
 clean:
-	rm -f *.o test_runner
+	rm -f *.o tests/*.o test_runner
