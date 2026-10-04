@@ -46,3 +46,17 @@ uint32_t get_field(uint32_t word, int pos, int width)
 
     return field;
 }
+
+uint32_t set_field(uint32_t word, int pos, int width, uint32_t value)
+{
+    uint32_t mask;
+
+    if (width > 32 || pos > 31 || pos + width > 32 || width == 0)
+        word = 0xFFFFFFFF;
+    else {
+        mask = (1u << width) - 1u;
+        word = (word & ~(mask << pos)) | ((value &= mask ) << pos);
+    }
+
+    return word;
+}
