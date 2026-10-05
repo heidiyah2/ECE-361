@@ -5,7 +5,7 @@ void print_binary(uint32_t x, int width)
     uint32_t mask;
     // check for out of bounds width
     if (width < 1 || width > 32) { 
-        printf("Invalid range for width\n");
+        printf("Cannot print binary, width larger than value.\n");
         return;
     }
 
