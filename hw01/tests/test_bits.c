@@ -1,58 +1,186 @@
 #include "status.h"
-#include <assert.h>
 #include <inttypes.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    unsigned int passed;
+    unsigned int failed;
+} test_summary_t;
+
+static unsigned int total_passed;
+static unsigned int total_failed;
+
+static void record_result(test_summary_t *summary, const char *name, int passed)
+{
+    if (passed) {
+        printf("Testing %s: PASS\n", name);
+        ++summary->passed;
+        ++total_passed;
+    } else {
+        printf("Testing %s: FAIL\n", name);
+        ++summary->failed;
+        ++total_failed;
+    }
+}
+
+static void print_summary(const char *category, test_summary_t summary)
+{
+    printf("%s summary: %u passed, %u failed\n\n",
+        category, summary.passed, summary.failed);
+}
+
+static void check_uint32(test_summary_t *summary, const char *name,
+    uint32_t actual, uint32_t expected)
+{
+    record_result(summary, name, actual == expected);
+}
+
+static void check_int32(test_summary_t *summary, const char *name,
+    int32_t actual, int32_t expected)
+{
+    record_result(summary, name, actual == expected);
+}
+
+static void test_print_binary(void)
+{
+    printf("=== print_binary (visual checks) ===\n");
+    printf("Testing width 8; expected: 0010 1100; actual:\n");
+    print_binary(0x2C, 8);
+    printf("Testing width below range; expected: Invalid range for width; actual:\n");
+    print_binary(0x2C, -1);
+    printf("Testing width above range; expected: Invalid range for width; actual:\n");
+    print_binary(0x2C, 33);
+    printf("Testing width 10; expected: 00 0010 1100; actual:\n");
+    print_binary(0x2C, 10);
+    printf("\n");
+}
+
+static void test_get_field(void)
+{
+    test_summary_t summary = {0, 0};
+
+    printf("=== get_field ===\n");
+    check_uint32(&summary, "extract bits 4-11", get_field(0xABCD, 4, 8),
+        UINT32_C(0xBC));
+    check_uint32(&summary, "width above 32", get_field(0xABCD, 1, 33),
+        UINT32_MAX);
+    check_uint32(&summary, "position above 31", get_field(0xABCD, 32, 4),
+        UINT32_MAX);
+    check_uint32(&summary, "position plus width above 32",
+        get_field(0xABCD, 30, 4), UINT32_MAX);
+    check_uint32(&summary, "zero width", get_field(0xABCD, 4, 0),
+        UINT32_MAX);
+    print_summary("get_field", summary);
+}
+
+static void test_set_field(void)
+{
+    test_summary_t summary = {0, 0};
+
+    printf("=== set_field ===\n");
+    check_uint32(&summary, "replace bits 8-15",
+        set_field(0x12345678, 8, 8, 0x1FF), UINT32_C(0x1234FF78));
+    check_uint32(&summary, "width above 32",
+        set_field(0x12345678, 8, 33, 0x1FF), UINT32_MAX);
+    check_uint32(&summary, "position above 31",
+        set_field(0x12345678, 32, 1, 0x1FF), UINT32_MAX);
+    check_uint32(&summary, "position plus width above 32",
+        set_field(0x12345678, 12, 24, 0x1FF), UINT32_MAX);
+    check_uint32(&summary, "zero width",
+        set_field(0x12345678, 8, 0, 0x1FF), UINT32_MAX);
+    print_summary("set_field", summary);
+}
+
+static void test_sign_extend(void)
+{
+    test_summary_t summary = {0, 0};
+
+    printf("=== sign_extend ===\n");
+    check_int32(&summary, "8-bit -8", sign_extend(0xF8, 8), -8);
+    check_int32(&summary, "width 32 preserves 0xF8",
+        sign_extend(0xF8, 32), 248);
+    check_int32(&summary, "width above 32",
+        sign_extend(0xF8, 33), -1);
+    check_int32(&summary, "zero width", sign_extend(0xF8, 0), -1);
+    check_int32(&summary, "minimum 32-bit signed value",
+        sign_extend(UINT32_C(0x80000000), 32), INT32_MIN);
+    print_summary("sign_extend", summary);
+}
+
+static int statuses_equal(status_t actual, status_t expected)
+{
+    return actual.STATUS_HEAT == expected.STATUS_HEAT
+        && actual.STATUS_COOL == expected.STATUS_COOL
+        && actual.STATUS_FAN == expected.STATUS_FAN
+        && actual.STATUS_FAULT == expected.STATUS_FAULT
+        && actual.STATUS_MODE == expected.STATUS_MODE
+        && actual.STATUS_RESERVED == expected.STATUS_RESERVED
+        && actual.STATUS_SETPOINT == expected.STATUS_SETPOINT;
+}
+
+static void check_status_unpack(test_summary_t *summary, const char *name,
+    uint16_t word, status_t expected)
+{
+    status_t actual = status_unpack(word);
+
+    printf("Testing %s (0x%04" PRIX16 "):\n", name, word);
+    status_print(actual);
+    record_result(summary, name, statuses_equal(actual, expected));
+    printf("\n");
+}
+
+static void test_status_unpack(void)
+{
+    test_summary_t summary = {0, 0};
+    const status_t sample_expected = {
+        .STATUS_HEAT = true,
+        .STATUS_COOL = false,
+        .STATUS_FAN = false,
+        .STATUS_FAULT = false,
+        .STATUS_MODE = STATUS_MODE_AUTO,
+        .STATUS_RESERVED = false,
+        .STATUS_SETPOINT = 22
+    };
+    const status_t negative_setpoint_expected = {
+        .STATUS_HEAT = true,
+        .STATUS_COOL = false,
+        .STATUS_FAN = true,
+        .STATUS_FAULT = true,
+        .STATUS_MODE = STATUS_MODE_AUTO,
+        .STATUS_RESERVED = false,
+        .STATUS_SETPOINT = -8
+    };
+    const status_t invalid_mode_expected = {
+        .STATUS_HEAT = false,
+        .STATUS_COOL = true,
+        .STATUS_FAN = false,
+        .STATUS_FAULT = false,
+        .STATUS_MODE = STATUS_MODE_INVALID,
+        .STATUS_RESERVED = true,
+        .STATUS_SETPOINT = 127
+    };
+
+    printf("=== status_unpack ===\n");
+    check_status_unpack(&summary, "sample status", UINT16_C(0x1631),
+        sample_expected);
+    check_status_unpack(&summary, "negative setpoint status", UINT16_C(0xF83D),
+        negative_setpoint_expected);
+    check_status_unpack(&summary, "invalid mode status", UINT16_C(0x7FD2),
+        invalid_mode_expected);
+    print_summary("status_unpack", summary);
+}
 
 int main(void)
 {
-    status_t status = status_unpack(UINT16_C(0xF83D)); // example given in instructions, should give setpoint 22 deg C, mode 3 (AUTO), heater on, compressor off, fan off, no fault, and reserved bit clear. 
+    test_print_binary();
+    test_get_field();
+    test_set_field();
+    test_sign_extend();
+    test_status_unpack();
 
-    /*
-    assert(status.STATUS_HEAT);
-    assert(!status.STATUS_COOL);
-    assert(status.STATUS_FAN);
-    assert(status.STATUS_FAULT);
-    assert(status.STATUS_MODE == STATUS_MODE_AUTO);
-    assert(!status.STATUS_RESERVED);
-    assert(status.STATUS_SETPOINT == -8);
+    printf("Overall automated checks: %u passed, %u failed\n",
+        total_passed, total_failed);
 
-    status = status_unpack(UINT16_C(0x7FD2));
-    assert(status.STATUS_MODE == STATUS_MODE_INVALID);
-    assert(status.STATUS_RESERVED);
-    assert(status.STATUS_SETPOINT == 127);
-    */
-
-    status_print(status_unpack(UINT16_C(0x1631)));
-
-    /*
-    print_binary(0x2C, 8); // general use, answer should be 0011 1100
-    print_binary(0x2C, -1); //test lower width bound
-    print_binary(0x2C, 33); //test upper width bound
-    print_binary(0x2C, 10); //test when width % 4 != 0
-    */
-
-    /*
-    printf("0x%08" PRIX32 "\n", get_field(0xABCD, 4, 8)); // general use, answer should be 0x000000BC
-    printf("0x%08" PRIX32 "\n", get_field(0xABCD, 1, 33)); // test width > 32, should be 0xFFFFFFFF for all below
-    printf("0x%08" PRIX32 "\n", get_field(0xABCD, 32, 4)); // test pos > 31
-    printf("0x%08" PRIX32 "\n", get_field(0xABCD, 30, 4)); // test pos + width > 32
-    printf("0x%08" PRIX32 "\n", get_field(0xABCD, 4, 0)); // test width = 0
-    */
-
-    /*
-    printf("0x%08" PRIX32 "\n", set_field(0x12345678, 8, 8, 0x1FF)); // general use, should give 0x1234FF78
-    printf("0x%08" PRIX32 "\n", set_field(0x12345678, 8, 33, 0x1FF)); // test width > 32, should return 0xFFFFFFFF for all below
-    printf("0x%08" PRIX32 "\n", set_field(0x12345678, 32, 1, 0x1FF)); // test pos > 31
-    printf("0x%08" PRIX32 "\n", set_field(0x12345678, 12, 24, 0x1FF)); // pos + width > 32
-    printf("0x%08" PRIX32 "\n", set_field(0x12345678, 8, 0, 0x1FF)); // test width = 0
-    */
-
-    
-    printf("%d\n", sign_extend(0xF8, 8)); // general use, should give -8
-    printf("%d\n", sign_extend(0xF8, 32)); // test width = 32, should give 248 (mask is all 1, gives original value 0xF8)
-    printf("%d\n", sign_extend(0xF8, 33)); // test width > 32, should give -1
-    printf("%d\n", sign_extend(0xF8, 0)); // test width = 0, should give -1
-    //printf("%d\n", sign_extend(UINT32_MAX, 31)); // 
-    
-
-    return 0;
+    return total_failed == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 }

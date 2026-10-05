@@ -1,7 +1,10 @@
 # HW 1 for ECE 361
 
+// add what library does, how to build, how to run tests, valid ranges of inputs, behavior at boundaries, and out-of-range behavior. And how status_unpack reports and invalid mode.
+
+
 ### test.c
-Various tests for behavior of functions.
+Various tests for behavior of functions organized by function, each tests boundary against expected. Produced PASS or FAIL and summarizes at end of each category and entire test.
 
 ### bits.c
 Contains 4 functions:
@@ -14,4 +17,4 @@ Contains 4 functions:
     - Boundary behavior: For invalid widths (0 or >32) return -1 to signify error. For width = 32 original value is returned (mask set to max).
 
 ### status.c
-Contains the function status_unpack(uint16_t, word) which returns the struct status_t and utilizes functions from bits.c to unpack the 16-bit word a thermostat reports. Invalid mode values give the value -1.
+Contains the function status_unpack(uint16_t, word) which returns the struct status_t and utilizes functions from bits.c to unpack the 16-bit word a thermostat reports. Invalid mode values give the value -1. Reserved bit of 1 shows "set" in print_status to alert user this bit is in use, presumably they should know what to do with that.

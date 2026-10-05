@@ -63,12 +63,12 @@ static const char *status_mode_name(enum status_mode mode) // pointer so prinf c
 
 void status_print(status_t status)
 {
-    printf("Setpoint: %d\xC2\xB0" "C\n", (int)status.STATUS_SETPOINT);
-    printf("Mode: %d (%s)\n", (int)status.STATUS_MODE,
-        status_mode_name(status.STATUS_MODE));
     printf("Heater: %s\n", status.STATUS_HEAT ? "on" : "off");
     printf("Compressor: %s\n", status.STATUS_COOL ? "on" : "off");
     printf("Fan: %s\n", status.STATUS_FAN ? "on" : "off");
     printf("Fault: %s\n", status.STATUS_FAULT ? "fault detected" : "no fault");
+    printf("Mode: %d (%s)\n", (int)status.STATUS_MODE,
+        status_mode_name(status.STATUS_MODE));
     printf("Reserved bit: %s\n", status.STATUS_RESERVED ? "set" : "clear");
+    printf("Setpoint: %d\xC2\xB0" "C\n", (int)status.STATUS_SETPOINT);
 }
