@@ -1,10 +1,12 @@
 ## Overall Use:
-I used the Chat in VS Code for code generation and questions on improvements and interpretations, and Gemini for general reminders of various C syntax (like how to print a single character) and git commands. Claudian was used for clarification of HW instructions and help on designing structure.
+I used the Chat in VS Code for code generation and questions on improvements, variations, and interpretations, and Gemini for general reminders of various C syntax and git commands. Claudian was used for clarification of HW instructions and help on designing the struct in part 3.
 
+## Details:
 ### test_bits.c
 - Used to figure out how to print uint32_t as hex value.
 - Used to move to folder tests/ and rename to test_bits.c (originally test.c before reading part 4 of the instructions).
-- Reorganized simple tests I wrote to be more formal according to HW instructions to show PASS/FAIL and summary for each test by category/function.
+- Reorganized simple tests I wrote to be more formal according to HW instructions to show PASS/FAIL and summary for each test by category/function, used my existing comments to outline purpose of tests.
+- It tried to overcomplicate things by making an output file, I just wanted a simple terminal output. Had to remind it to keep things simple.
 
 ### bits.h
 - Used VS Code Chat to populate bits.h with desired protection, libraries, and prototypes.
@@ -25,3 +27,5 @@ I used the Chat in VS Code for code generation and questions on improvements and
 ### Makefile
 - Generated file with desired gcc warning tags and dependencies for compilation and linking.
 
+### README.md
+- Updated sections on building and testing, formatted so file names and arguments appeared properly.
