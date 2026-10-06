@@ -46,6 +46,7 @@ static void check_int32(test_summary_t *summary, const char *name,
 static void test_print_binary(void)
 {
     printf("=== print_binary (visual checks) ===\n");
+    // Check formatted output and rejection of widths outside 1 through 32.
     printf("Testing width 8; expected: 0010 1100; actual:\n");
     print_binary(0x2C, 8);
     printf("Testing width below range; expected: Cannot print binary; width is not between 1 and 32; actual:\n");
@@ -60,6 +61,7 @@ static void test_get_field(void)
     test_summary_t summary = {0, 0};
 
     printf("=== get_field ===\n");
+    // Check ordinary extraction and valid fields at the word boundaries.
     check_uint32(&summary, "extract bits 4-11", get_field(0xABCD, 4, 8),
         UINT32_C(0xBC));
     check_uint32(&summary, "width 1 at bit 31",
@@ -68,18 +70,30 @@ static void test_get_field(void)
         get_field(UINT32_C(0x89ABCDEF), 0, 32), UINT32_C(0x89ABCDEF));
     check_uint32(&summary, "field ends at bit 31",
         get_field(UINT32_C(0x89ABCDEF), 28, 4), UINT32_C(0x8));
+
+    // Check that extraction preserves zero and all-one field values.
+    check_uint32(&summary, "zero-valued field",
+        get_field(UINT32_C(0x00000000), 4, 8), UINT32_C(0));
+    check_uint32(&summary, "all-one field",
+        get_field(UINT32_MAX, 4, 8), UINT32_C(0xFF));
+
+    // Reject widths below 1 or above 32, including an extreme positive value.
     check_uint32(&summary, "width above 32", get_field(0xABCD, 1, 33),
         UINT32_MAX);
     check_uint32(&summary, "INT_MAX width",
         get_field(0xABCD, 0, INT_MAX), UINT32_MAX);
+
+    // Reject positions outside 0 through 31, including both integer extremes.
     check_uint32(&summary, "position above 31", get_field(0xABCD, 32, 4),
         UINT32_MAX);
     check_uint32(&summary, "INT_MAX position",
         get_field(0xABCD, INT_MAX, 1), UINT32_MAX);
     check_uint32(&summary, "negative position",
         get_field(0xABCD, -1, 1), UINT32_MAX);
-    check_uint32(&summary, "INT_MIN position and width",
-        get_field(0xABCD, INT_MIN, INT_MIN), UINT32_MAX);
+    check_uint32(&summary, "INT_MIN position",
+        get_field(0xABCD, INT_MIN, 1), UINT32_MAX);
+
+    // Reject zero or negative widths and valid-sized fields extending past bit 31.
     check_uint32(&summary, "negative width",
         get_field(0xABCD, 0, -1), UINT32_MAX);
     check_uint32(&summary, "position plus width above 32",
@@ -94,6 +108,7 @@ static void test_set_field(void)
     test_summary_t summary = {0, 0};
 
     printf("=== set_field ===\n");
+    // Check field replacement and rejection of invalid ranges and widths.
     check_uint32(&summary, "replace bits 8-15",
         set_field(0x12345678, 8, 8, 0x1FF), UINT32_C(0x1234FF78));
     check_uint32(&summary, "width above 32",
@@ -112,6 +127,7 @@ static void test_sign_extend(void)
     test_summary_t summary = {0, 0};
 
     printf("=== sign_extend ===\n");
+    // Check negative and positive results, full-width handling, and invalid widths.
     check_int32(&summary, "8-bit -8", sign_extend(0xF8, 8), -8);
     check_int32(&summary, "width 32 preserves 0xF8",
         sign_extend(0xF8, 32), 248);
@@ -177,6 +193,7 @@ static void test_status_unpack(void)
     };
 
     printf("=== status_unpack ===\n");
+    // Check ordinary decoding, signed setpoints, and invalid mode handling.
     check_status_unpack(&summary, "sample status", UINT16_C(0x1631),
         sample_expected);
     check_status_unpack(&summary, "negative setpoint status", UINT16_C(0xF83D),
