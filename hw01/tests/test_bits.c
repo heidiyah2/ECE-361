@@ -100,17 +100,44 @@ static void test_set_field(void)
     test_summary_t summary = {0, 0};
 
     printf("=== set_field ===\n");
-    // Check field replacement and rejection of invalid ranges and widths.
+    // Check ordinary replacement and preservation of bits outside the field.
     check_uint32(&summary, "replace bits 8-15",
-        set_field(0x12345678, 8, 8, 0x1FF), UINT32_C(0x1234FF78));
+        set_field(UINT32_C(0x12345678), 8, 8, UINT32_C(0xA5)),
+        UINT32_C(0x1234A578));
+
+    // Check minimum and maximum widths and the highest valid position.
+    check_uint32(&summary, "width 1 at position 0",
+        set_field(UINT32_C(0x12345678), 0, 1, UINT32_C(1)),
+        UINT32_C(0x12345679));
+    check_uint32(&summary, "width 32 at position 0",
+        set_field(UINT32_C(0x12345678), 0, 32, UINT32_C(0x89ABCDEF)),
+        UINT32_C(0x89ABCDEF));
+    check_uint32(&summary, "position 31 with width 1",
+        set_field(UINT32_C(0x12345678), 31, 1, UINT32_C(1)),
+        UINT32_C(0x92345678));
+
+    // Check that values wider than the field are truncated to fit.
+    check_uint32(&summary, "truncate value wider than field",
+        set_field(UINT32_C(0x12345678), 8, 8, UINT32_C(0x1FF)),
+        UINT32_C(0x1234FF78));
+
+    // Reject widths outside 1 through 32.
     check_uint32(&summary, "width above 32",
         set_field(0x12345678, 8, 33, 0x1FF), UINT32_MAX);
-    check_uint32(&summary, "position above 31",
-        set_field(0x12345678, 32, 1, 0x1FF), UINT32_MAX);
-    check_uint32(&summary, "position plus width above 32",
-        set_field(0x12345678, 12, 24, 0x1FF), UINT32_MAX);
     check_uint32(&summary, "zero width",
         set_field(0x12345678, 8, 0, 0x1FF), UINT32_MAX);
+    check_uint32(&summary, "negative width",
+        set_field(0x12345678, 8, -1, 0x1FF), UINT32_MAX);
+
+    // Reject positions outside 0 through 31.
+    check_uint32(&summary, "position above 31",
+        set_field(0x12345678, 32, 1, 0x1FF), UINT32_MAX);
+    check_uint32(&summary, "negative position",
+        set_field(0x12345678, -1, 1, 0x1FF), UINT32_MAX);
+
+    // Reject valid-sized fields extending past bit 31.
+    check_uint32(&summary, "position plus width above 32",
+        set_field(0x12345678, 12, 24, 0x1FF), UINT32_MAX);
     print_summary("set_field", summary);
 }
 

@@ -19,16 +19,18 @@ Various tests for behavior of functions organized by function, each tests bounda
 
 ### `bits.c`:
 Contains four functions for displaying, extracting, replacing, and interpreting bits in 32-bit words:
-1. `print_binary` - takes arguments `value` and `width`, then prints the lowest `width` bits of `value` from most significant to least significant, grouping bits in fours separated by a space. For example, `print_binary(0x2C, 8)` prints `0010 1100`.
+1. `print_binary` - takes arguments `value` (`uint32_t`) and `width` (`int`), then prints the lowest `width` bits of `value` from most significant to least significant, grouping bits in fours separated by a space. For example, `print_binary(0x2C, 8)` prints `0010 1100`.
     - Boundary behavior: Widths from 1 through 32 are accepted. For a width below 1 or above 32, it prints an invalid-range message and returns without printing the bit pattern.
     - Ensured mask is at minimum 32 bits, since unsigned integer (1u) guaranteed minimum is only 16 bits.
-2. `get_field` - takes arguments `word`, `pos` (a starting bit position), and `width`. It extracts bits from `pos` through `pos + width - 1`, then shifts the result down so the field starts at bit 0.
+2. `get_field` - takes arguments `word` (`uint32_t`), `pos` (`int`, a starting bit position), and `width` (`int`). It extracts bits from `pos` through `pos + width - 1`, then shifts the result down so the field starts at bit 0.
     - Boundary behavior: Allowed values are 0-31 for `pos`, and 1-32 for `widths`, with `pos + width` no greater than 32. Invalid arguments return `UINT32_MAX` as an error value.
     - `width = 32` is tested for explicitly since calculation for `mask` would cause undefined behavior.
-3. `set_field` - takes a word, a starting bit position, a width, and a value. It replaces the selected field with the lowest `width` bits of `value` and leaves the other word bits unchanged.
+3. `set_field` - takes arguments `word` (`uint32_t`), `pos` (`int`, starting bit position), `width` (`int`), and `value` (`uint32_t`). It replaces the selected field with the lowest `width` bits of `value` and leaves the other `word` bits unchanged.
     - Boundary behavior: Valid positions are 0-31 and valid widths are 1-32, with `pos + width` no greater than 32. Invalid arguments return `UINT32_MAX` as an error value.
-4. `sign_extend` - takes a value and a width, interprets the lowest `width` bits as a two's-complement number, and returns the signed result as an `int32_t`. For example, `sign_extend(0xF8, 8)` returns `-8`.
+    - `width = 32` is tested for explicitly since calculation for `mask` would cause undefined behavior.
+4. `sign_extend` - takes arguments `value` (`uint32_t`) and `width` (`int`), and interprets the lowest `width` bits as a two's-complement number, returning the signed result as an `int32_t`. For example, `sign_extend(0xF8, 8)` returns `-8`.
     - Boundary behavior: Widths from 1 through 32 are accepted. A width of 0 or greater than 32 returns `-1`. At width 32, all 32 bits of the input are used.
+
 
 Notes on boundary behavior decisions:
 - `UINT32_MAX` was chosen as the out-of-range return value for `get_field` and `set_field` to 1) avoid setting bits to 0 and giving the user a sense of "all's clear!" when that might not be the case, and 2) to hopefully make issues more noticeable and assist debugging.
