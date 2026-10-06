@@ -43,13 +43,15 @@ uint32_t get_field(uint32_t word, int pos, int width)
 
 uint32_t set_field(uint32_t word, int pos, int width, uint32_t value)
 {
-    uint32_t mask;
+    uint32_t mask, clear, set;
 
-    if (width > 32 || pos > 31 || pos + width > 32 || width == 0)
+    if (width < 1 || width > 32 || pos < 0 || pos > 31 || pos + width > 32)
         word = 0xFFFFFFFF;
     else {
-        mask = (1u << width) - 1u;
-        word = (word & ~(mask << pos)) | ((value &= mask ) << pos);
+        mask = width == 32 ? UINT32_MAX : (UINT32_C(1) << width) - 1u;
+        clear = word & ~(mask << pos);
+        set = (value &= mask ) << pos;
+        word = clear | set;
     }
 
     return word;
