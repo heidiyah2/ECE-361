@@ -1,5 +1,6 @@
 #include "status.h"
 #include <inttypes.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -61,10 +62,26 @@ static void test_get_field(void)
     printf("=== get_field ===\n");
     check_uint32(&summary, "extract bits 4-11", get_field(0xABCD, 4, 8),
         UINT32_C(0xBC));
+    check_uint32(&summary, "width 1 at bit 31",
+        get_field(UINT32_C(0x80000000), 31, 1), UINT32_C(1));
+    check_uint32(&summary, "width 32 at position 0",
+        get_field(UINT32_C(0x89ABCDEF), 0, 32), UINT32_C(0x89ABCDEF));
+    check_uint32(&summary, "field ends at bit 31",
+        get_field(UINT32_C(0x89ABCDEF), 28, 4), UINT32_C(0x8));
     check_uint32(&summary, "width above 32", get_field(0xABCD, 1, 33),
         UINT32_MAX);
+    check_uint32(&summary, "INT_MAX width",
+        get_field(0xABCD, 0, INT_MAX), UINT32_MAX);
     check_uint32(&summary, "position above 31", get_field(0xABCD, 32, 4),
         UINT32_MAX);
+    check_uint32(&summary, "INT_MAX position",
+        get_field(0xABCD, INT_MAX, 1), UINT32_MAX);
+    check_uint32(&summary, "negative position",
+        get_field(0xABCD, -1, 1), UINT32_MAX);
+    check_uint32(&summary, "INT_MIN position and width",
+        get_field(0xABCD, INT_MIN, INT_MIN), UINT32_MAX);
+    check_uint32(&summary, "negative width",
+        get_field(0xABCD, 0, -1), UINT32_MAX);
     check_uint32(&summary, "position plus width above 32",
         get_field(0xABCD, 30, 4), UINT32_MAX);
     check_uint32(&summary, "zero width", get_field(0xABCD, 4, 0),

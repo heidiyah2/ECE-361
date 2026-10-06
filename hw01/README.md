@@ -21,6 +21,7 @@ Various tests for behavior of functions organized by function, each tests bounda
 Contains four functions for displaying, extracting, replacing, and interpreting bits in 32-bit words:
 1. `print_binary` - takes a `uint32_t` value and a width, then prints the lowest `width` bits from most significant to least significant, grouping bits in fours with spaces. For example, `print_binary(0x2C, 8)` prints `0010 1100`.
     - Boundary behavior: Widths from 1 through 32 are accepted. For a width below 1 or above 32, it prints an invalid-range message and returns without printing the bit pattern.
+    - Ensured mask is at minimum 32 bits, since unsigned integer (1u) guaranteed minimum is only 16 bits.
 2. `get_field` - takes a word, a starting bit position, and a width. It extracts bits from `pos` through `pos + width - 1`, then shifts the result down so the field starts at bit 0.
     - Boundary behavior: Valid positions are 0-31 and valid widths are 1-32, with `pos + width` no greater than 32. Invalid arguments return `UINT32_MAX` as an error value.
 3. `set_field` - takes a word, a starting bit position, a width, and a value. It replaces the selected field with the lowest `width` bits of `value` and leaves the other word bits unchanged.

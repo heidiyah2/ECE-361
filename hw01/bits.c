@@ -9,7 +9,7 @@ void print_binary(uint32_t x, int width)
         return;
     }
 
-    mask = UINT32_C(1) << (width - 1u); // specify min 32 bits (guaranteed is >=16 bits only, implementation-defined)
+    mask = UINT32_C(1) << (width - 1u); // specify min 32 bits (guaranteed for 1u is >=16 bits only, implementation-defined)
 
     for (int bits_left = width; bits_left > 0; --bits_left) {
         if (bits_left < width && bits_left % 4 == 0) {
@@ -31,10 +31,10 @@ uint32_t get_field(uint32_t word, int pos, int width)
 {
     uint32_t field, mask;
 
-    if (width > 32 || pos > 31 || pos + width > 32 || width == 0)
-        field = 0xFFFFFFFF;
+    if (width < 1 || width > 32 || pos < 0 || pos > 31 || pos + width > 32)
+        field = UINT32_MAX;
     else {
-        mask = (1u << width) - 1u;
+        mask = width == 32 ? UINT32_MAX : (UINT32_C(1) << width) - 1u;
         field = (word >> pos) & mask;
     }
 
