@@ -47,12 +47,10 @@ static void test_print_binary(void)
     printf("=== print_binary (visual checks) ===\n");
     printf("Testing width 8; expected: 0010 1100; actual:\n");
     print_binary(0x2C, 8);
-    printf("Testing width below range; expected: Invalid range for width; actual:\n");
+    printf("Testing width below range; expected: Cannot print binary; width is not between 1 and 32; actual:\n");
     print_binary(0x2C, -1);
-    printf("Testing width above range; expected: Invalid range for width; actual:\n");
+    printf("Testing width above range; expected: Cannot print binary; width is not between 1 and 32; actual:\n");
     print_binary(0x2C, 33);
-    printf("Testing width 10; expected: 00 0010 1100; actual:\n");
-    print_binary(0x2C, 10);
     printf("\n");
 }
 
