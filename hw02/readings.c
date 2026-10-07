@@ -27,12 +27,12 @@
 #define NUM_BINS     20          /* histogram: 0 to 100 C in 5 C bins */
 #define BIN_WIDTH    5.0f
 
-int   ticks[MAX_READINGS];
-float temps[MAX_READINGS];
-float hums[MAX_READINGS];
-int   count = 0;
-int   skipped = 0;
-float threshold = 30.0f;
+int   ticks[MAX_READINGS]; // used to read lines, and print run of cons readings
+float temps[MAX_READINGS]; // read lines, stats, and histogram
+float hums[MAX_READINGS]; // read lines, temp
+int   count = 0; // make local only
+int   skipped = 0; // only for reading lines
+float threshold = 30.0f; // command line, pass to stats for cons lines
 
 /* largest temperature from index i to the end, recursively */
 float max_temp(int i) {
@@ -43,6 +43,7 @@ float max_temp(int i) {
 }
 
 int main(int argc, char *argv[]) {
+// ----- Checks arguments for main -----------
     char line[LINE_LEN];
 
     if (argc > 2) {
@@ -57,7 +58,8 @@ int main(int argc, char *argv[]) {
             return 1;
         }
     }
-
+// ----------------------------------------------------------
+// ------ reads lines -------
     while (fgets(line, sizeof line, stdin) != NULL) {
         int i = 0;
         while (line[i] == ' ' || line[i] == '\t')
@@ -73,7 +75,7 @@ int main(int argc, char *argv[]) {
         else
             skipped++;
     }
-
+// ----- prints how many lines/readings were read -----
     printf("readings: %d\n", count);
     printf("skipped:  %d\n", skipped);
     if (count == 0) {
