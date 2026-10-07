@@ -22,16 +22,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_READINGS 1000
-#define LINE_LEN     128
-#define NUM_BINS     20          /* histogram: 0 to 100 C in 5 C bins */
-#define BIN_WIDTH    5.0f
+#define MAX_READINGS 1000 // only in read lines, reading.h
+#define LINE_LEN     128 // only for command arg check in main
+#define NUM_BINS     20          /* histogram: 0 to 100 C in 5 C bins */ // histogram.h
+#define BIN_WIDTH    5.0f // histogram.h
 
 int   ticks[MAX_READINGS]; // used to read lines, and print run of cons readings
 float temps[MAX_READINGS]; // read lines, stats, and histogram
 float hums[MAX_READINGS]; // read lines, temp
 int   count = 0; // make local only
-int   skipped = 0; // only for reading lines
+int   skipped = 0; // reading.c
 float threshold = 30.0f; // command line, pass to stats for cons lines
 
 /* largest temperature from index i to the end, recursively */
