@@ -29,10 +29,20 @@
 #define NUM_BINS     20          /* histogram: 0 to 100 C in 5 C bins */ // histogram.h
 #define BIN_WIDTH    5.0f // histogram.h
 
+
+
 int   skipped = 0; // reading.c
-float threshold = 30.0f; // command line, pass to stats for cons lines
+
 
 int main(int argc, char *argv[]) {
+
+    int   ticks[MAX_READINGS]; // used to read lines, and print run of cons readings
+    float temps[MAX_READINGS]; // read lines, stats, and histogram
+    float hums[MAX_READINGS]; // read lines, temp
+
+    int   count = 0; // make local only
+    float threshold = 30.0f; // command line, pass to stats for cons lines
+
 // ----- Checks arguments for main -----------
     char line[LINE_LEN];
 
@@ -49,12 +59,6 @@ int main(int argc, char *argv[]) {
         }
     }
 // ----------------------------------------------------------
-
-int   ticks[MAX_READINGS]; // used to read lines, and print run of cons readings
-float temps[MAX_READINGS]; // read lines, stats, and histogram
-float hums[MAX_READINGS]; // read lines, temp
-
-int   count = 0; // make local only
 
 // ------ reads lines -------
     while (fgets(line, sizeof line, stdin) != NULL) {
@@ -80,49 +84,13 @@ int   count = 0; // make local only
         return 0;
     }
 
-    /* temperature: min and mean */
-    float tmin = temps[0];
-    float tsum = 0.0f;
-    for (int i = 0; i < count; i++) {
-        if (temps[i] < tmin)
-            tmin = temps[i];
-        tsum += temps[i];
-    }
-    printf("temperature: min %6.1f  max %6.1f  mean %6.2f C\n", tmin, max_temp(temps, count, 0), tsum / count);
+//------ temp, humidity, threshold -----------------------
 
-    /* humidity: min, max, and mean, the same loop again */
-    float hmin = hums[0];
-    float hmax = hums[0];
-    float hsum = 0.0f;
-    for (int i = 0; i < count; i++) {
-        if (hums[i] < hmin)
-            hmin = hums[i];
-        if (hums[i] > hmax)
-            hmax = hums[i];
-        hsum += hums[i];
-    }
-    printf("humidity:    min %6.1f  max %6.1f  mean %6.2f %%RH\n", hmin, hmax, hsum / count);
+    temp_mean_min_sum(temps, count);
+    hum_mean_min_sum(hums, count);
+    temp_threshold(temps, ticks, count, threshold);
 
-    /* longest run of consecutive readings above the threshold */
-    int run = 0, best = 0, best_start = -1, start = 0;
-    for (int i = 0; i < count; i++) {
-        if (temps[i] > threshold) {
-            if (run == 0)
-                start = i;
-            run++;
-            if (run > best) {
-                best = run;
-                best_start = start;
-            }
-        } else {
-            run = 0;
-        }
-    }
-    if (best == 0)
-        printf("above %.1f C: never\n", threshold);
-    else
-        printf("above %.1f C: longest run %d readings, from tick %d to tick %d\n",
-               threshold, best, ticks[best_start], ticks[best_start + best - 1]);
+//--------------------------------------------------------------
 
     /* histogram of temperatures, 5 C bins; values outside 0..100 go to the end bins */
     int bins[NUM_BINS] = {0};
