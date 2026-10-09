@@ -26,10 +26,6 @@
 #include "histogram.h"
 
 #define LINE_LEN     128 // only for command arg check in main
-#define NUM_BINS     20          /* histogram: 0 to 100 C in 5 C bins */ // histogram.h
-#define BIN_WIDTH    5.0f // histogram.h
-
-
 
 int   skipped = 0; // reading.c
 
@@ -91,25 +87,7 @@ int main(int argc, char *argv[]) {
     temp_threshold(temps, ticks, count, threshold);
 
 //--------------------------------------------------------------
+    histogram(temps, count);
 
-    /* histogram of temperatures, 5 C bins; values outside 0..100 go to the end bins */
-    int bins[NUM_BINS] = {0};
-    for (int i = 0; i < count; i++) {
-        int b = (int) (temps[i] / BIN_WIDTH);
-        if (temps[i] < 0.0f)
-            b = 0;
-        if (b >= NUM_BINS)
-            b = NUM_BINS - 1;
-        bins[b]++;
-    }
-    printf("histogram:\n");
-    for (int b = 0; b < NUM_BINS; b++) {
-        if (bins[b] == 0)
-            continue;
-        printf("  %5.1f to %5.1f C | ", b * BIN_WIDTH, (b + 1) * BIN_WIDTH);
-        for (int k = 0; k < bins[b]; k++)
-            putchar('*');
-        printf(" %d\n", bins[b]);
-    }
     return 0;
 }
