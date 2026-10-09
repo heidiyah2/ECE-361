@@ -1,9 +1,9 @@
 #include "histogram.h"
 
 /* histogram of temperatures, 5 C bins; values outside 0..100 go to the end bins */
-void histogram(float temps[], int count) {
+void histogram(float temps[], int num_readings) {
     int bins[NUM_BINS] = {0};
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < num_readings; i++) {
         int b = (int) (temps[i] / BIN_WIDTH);
         if (temps[i] < 0.0f)
             b = 0;

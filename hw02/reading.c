@@ -1,6 +1,6 @@
 #include "reading.h"
 
-int read_lines(int ticks[], float temps[], float hums[], int *count, int *skipped) {
+int read_lines(int ticks[], float temps[], float hums[], int *num_readings, int *skipped) {
     char line[LINE_LEN];
 // ------ reads lines -------
     while (fgets(line, sizeof line, stdin) != NULL) {
@@ -9,12 +9,12 @@ int read_lines(int ticks[], float temps[], float hums[], int *count, int *skippe
             i++;
         if (line[i] == '\n' || line[i] == '\0' || line[i] == '#')
             continue;
-        if (*count == MAX_READINGS) {
+        if (*num_readings == MAX_READINGS) {
             fprintf(stderr, "warning: more than %d readings, the rest are ignored\n", MAX_READINGS);
             break;
         }
-        if (sscanf(line, "%d %f %f", &ticks[*count], &temps[*count], &hums[*count]) == 3)
-            (*count)++;
+        if (sscanf(line, "%d %f %f", &ticks[*num_readings], &temps[*num_readings], &hums[*num_readings]) == 3)
+            (*num_readings)++;
         else
             (*skipped)++;
     }
