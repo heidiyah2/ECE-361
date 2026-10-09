@@ -31,7 +31,6 @@ Contains four functions for displaying, extracting, replacing, and interpreting 
 4. `sign_extend` - takes arguments `value` (`uint32_t`) and `width` (`int`), and interprets the lowest `width` bits as a two's-complement number, returning the signed result as an `int32_t`. For example, `sign_extend(0xF8, 8)` returns `-8`.
     - Boundary behavior: Widths from 1 through 32 are accepted. A width of 0 or greater than 32 returns `-1`. At width 32, all 32 bits of the input are used.
 
-
 Notes on boundary behavior decisions:
 - `UINT32_MAX` was chosen as the out-of-range return value for `get_field` and `set_field` to 1) avoid setting bits to 0 and giving the user a sense of "all's clear!" when that might not be the case, and 2) to hopefully make issues more noticeable and assist debugging.
 - `-1` was chosen as the out-of-range return value for `sign_extend` as it's a common value related to errors, and the return type allowed it. This could cause issues if the result expected for this function is `-1`, but hopefully the likelihood is low as this function is used to decode the temperature status field. 

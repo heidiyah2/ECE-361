@@ -147,9 +147,9 @@ static void test_sign_extend(void)
 
     printf("=== sign_extend ===\n");
     // Check negative and positive results, full-width handling, and invalid widths.
-    check_int32(&summary, "8-bit -8", sign_extend(0xF8, 8), -8);
+    check_int32(&summary, "0xF8 = -8", sign_extend(0xF8, 8), -8);
     check_int32(&summary, "width 32 preserves 0xF8",
-        sign_extend(0xF8, 32), 248);
+        sign_extend(0xF8, 32), UINT32_C(0xF8));
     check_int32(&summary, "width above 32",
         sign_extend(0xF8, 33), -1);
     check_int32(&summary, "zero width", sign_extend(0xF8, 0), -1);

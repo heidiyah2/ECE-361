@@ -34,7 +34,7 @@ uint32_t get_field(uint32_t word, int pos, int width)
     if (width < 1 || width > 32 || pos < 0 || pos > 31 || pos + width > 32)
         field = UINT32_MAX;
     else {
-        mask = width == 32 ? UINT32_MAX : (UINT32_C(1) << width) - 1u;
+        mask = width == 32 ? UINT32_MAX : (UINT32_C(1) << width) - 1u; // condition ? value_if_true : value_if_false
         field = (word >> pos) & mask;
     }
 
@@ -65,9 +65,9 @@ int32_t sign_extend(uint32_t value, int width)
     if (width < 1 || width > 32)
         return -1;
 
-    mask = width == 32 ? UINT32_MAX : (1u << width) - 1u; // condition ? value_if_true : value_if_false
+    mask = width == 32 ? UINT32_MAX : (UINT32_C(1) << width) - 1u; 
     value &= mask;
-    sign_bit = 1u << (width - 1);
+    sign_bit = UINT32_C(1) << (width - 1);
 
     if ((value & sign_bit) != 0)
         value |= ~mask;
