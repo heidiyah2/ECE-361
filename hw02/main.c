@@ -18,16 +18,12 @@
  * code, and a main() that does everything. HW2 asks you to split it into
  * modules without changing what it prints.
  */
-#include <stdlib.h> // 
-//#include <string.h> // not used
+#include <stdlib.h> 
 
 #include "reading.h"
 #include "stats.h"
 #include "histogram.h"
 
-#define LINE_LEN     128 // only for command arg check in main
-
-int   skipped = 0; // reading.c
 
 
 int main(int argc, char *argv[]) {
@@ -36,11 +32,11 @@ int main(int argc, char *argv[]) {
     float temps[MAX_READINGS]; // read lines, stats, and histogram
     float hums[MAX_READINGS]; // read lines, temp
 
-    int   count = 0; // make local only
+    int   count = 0;
+    int skipped = 0;
     float threshold = 30.0f; // command line, pass to stats for cons lines
 
 // ----- Checks arguments for main -----------
-    char line[LINE_LEN];
 
     if (argc > 2) {
         fprintf(stderr, "usage: %s [threshold] < readings.txt\n", argv[0]);
@@ -56,29 +52,18 @@ int main(int argc, char *argv[]) {
     }
 // ----------------------------------------------------------
 
-// ------ reads lines -------
-    while (fgets(line, sizeof line, stdin) != NULL) {
-        int i = 0;
-        while (line[i] == ' ' || line[i] == '\t')
-            i++;
-        if (line[i] == '\n' || line[i] == '\0' || line[i] == '#')
-            continue;
-        if (count == MAX_READINGS) {
-            fprintf(stderr, "warning: more than %d readings, the rest are ignored\n", MAX_READINGS);
-            break;
-        }
-        if (sscanf(line, "%d %f %f", &ticks[count], &temps[count], &hums[count]) == 3)
-            count++;
-        else
-            skipped++;
-    }
-// ----- prints how many lines/readings were read -----
+    read_lines(ticks, temps, hums, &count, &skipped);
+
+    // ----- prints how many lines/readings were read -----
     printf("readings: %d\n", count);
     printf("skipped:  %d\n", skipped);
     if (count == 0) {
         printf("no readings, no summary\n");
         return 0;
     }
+
+    if (count == 0)
+        return 0;
 
 //------ temp, humidity, threshold -----------------------
 
