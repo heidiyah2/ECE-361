@@ -3,4 +3,6 @@
 
 #include <stdio.h>
 
+float max_temp(float temps[], int count, int i);
+
 #endif

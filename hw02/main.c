@@ -25,25 +25,12 @@
 #include "stats.h"
 #include "histogram.h"
 
-#define MAX_READINGS 1000 // only in read lines, reading.h
 #define LINE_LEN     128 // only for command arg check in main
 #define NUM_BINS     20          /* histogram: 0 to 100 C in 5 C bins */ // histogram.h
 #define BIN_WIDTH    5.0f // histogram.h
 
-int   ticks[MAX_READINGS]; // used to read lines, and print run of cons readings
-float temps[MAX_READINGS]; // read lines, stats, and histogram
-float hums[MAX_READINGS]; // read lines, temp
-int   count = 0; // make local only
 int   skipped = 0; // reading.c
 float threshold = 30.0f; // command line, pass to stats for cons lines
-
-/* largest temperature from index i to the end, recursively */
-float max_temp(int i) {
-    if (i == count - 1)
-        return temps[i];
-    float rest = max_temp(i + 1);
-    return temps[i] > rest ? temps[i] : rest;
-}
 
 int main(int argc, char *argv[]) {
 // ----- Checks arguments for main -----------
@@ -62,6 +49,13 @@ int main(int argc, char *argv[]) {
         }
     }
 // ----------------------------------------------------------
+
+int   ticks[MAX_READINGS]; // used to read lines, and print run of cons readings
+float temps[MAX_READINGS]; // read lines, stats, and histogram
+float hums[MAX_READINGS]; // read lines, temp
+
+int   count = 0; // make local only
+
 // ------ reads lines -------
     while (fgets(line, sizeof line, stdin) != NULL) {
         int i = 0;
@@ -94,7 +88,7 @@ int main(int argc, char *argv[]) {
             tmin = temps[i];
         tsum += temps[i];
     }
-    printf("temperature: min %6.1f  max %6.1f  mean %6.2f C\n", tmin, max_temp(0), tsum / count);
+    printf("temperature: min %6.1f  max %6.1f  mean %6.2f C\n", tmin, max_temp(temps, count, 0), tsum / count);
 
     /* humidity: min, max, and mean, the same loop again */
     float hmin = hums[0];
