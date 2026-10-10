@@ -3,9 +3,10 @@
 
 #include <stdio.h>
 
-#define NUM_BINS     20          /* histogram: 0 to 100 C in 5 C bins */ // histogram.h
-#define BIN_WIDTH    5.0f // histogram.h
+#define NUM_BINS 20
+#define BIN_WIDTH 5.0f // 5 deg width
 
-void histogram(float temps[], int num_readings);
+// prints histogram of temperatures in 5 C bins; values outside 0..100 go to the end bins, expects temps array and num_readings (pos count of valid lines).
+void histogram(const float temps[], int num_readings);
 
 #endif

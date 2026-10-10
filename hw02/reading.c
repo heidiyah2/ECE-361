@@ -1,8 +1,9 @@
 #include "reading.h"
 
 int read_lines(int ticks[], float temps[], float hums[], int *num_readings, int *skipped) {
+    
     char line[LINE_LEN];
-// ------ reads lines -------
+
     while (fgets(line, sizeof line, stdin) != NULL) {
         int i = 0;
         while (line[i] == ' ' || line[i] == '\t')

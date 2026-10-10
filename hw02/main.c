@@ -20,13 +20,13 @@
 
 int main(int argc, char *argv[]) {
 
-    int ticks[MAX_READINGS]; // used to read lines, and print run of cons readings
-    float temps[MAX_READINGS]; // read lines, stats, and histogram
-    float hums[MAX_READINGS]; // read lines, temp
+    int ticks[MAX_READINGS];
+    float temps[MAX_READINGS];
+    float hums[MAX_READINGS];
 
     int num_readings = 0;
     int skipped = 0;
-    float threshold = 30.0f; // command line, pass to stats for cons lines
+    float threshold = 30.0f;
 
 // ----- Checks arguments for main -----------
     if (argc > 2) {
@@ -58,9 +58,9 @@ int main(int argc, char *argv[]) {
 
 //------ temp, humidity, threshold -----------------------
 
-    temp_mean_min_sum(temps, num_readings);
-    hum_mean_min_sum(hums, num_readings);
-    temp_threshold(temps, ticks, num_readings, threshold);
+    stats_temp(temps, num_readings);
+    stats_hum(hums, num_readings);
+    stats_temp_threshold(temps, ticks, num_readings, threshold);
 
 //---------------- histogram -----------------------------
     histogram(temps, num_readings);
