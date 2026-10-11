@@ -8,12 +8,12 @@ struct stats_summary {
 };
 
 // finds max of given temp or humidity, recursively
-static float stats_max(const float arr[], int num_readings, int i) {
-    if (i == num_readings - 1)
-        return arr[i];
-    float rest = stats_max(arr, num_readings, i + 1);
+static float stats_max(const float arr[], int num_readings) {
+    if (num_readings == 1)
+        return arr[0];
+    float rest = stats_max(arr + 1, num_readings - 1); // advance arr pointer
 
-    return arr[i] > rest ? arr[i] : rest;
+    return arr[0] > rest ? arr[0] : rest;
 }
 
 // finds min and sum of desired array, calls stats_max & assigns stats to struct stats_summary
@@ -27,7 +27,7 @@ static struct stats_summary stats_min_sum_mean(const float arr[], int num_readin
             result.min = arr[i];
         result.sum += arr[i];
     }
-    result.max = stats_max(arr, num_readings, 0);
+    result.max = stats_max(arr, num_readings);
     return result;
 }
 

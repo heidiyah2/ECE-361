@@ -17,8 +17,7 @@ stats.o: stats.c stats.h
 histogram.o: histogram.c histogram.h
 
 test: readings tests/test_stats
-	./tests/test_stats
-	sh regress.sh
+	./tests/test_stats && sh regress.sh
 
 tests/test_stats: $(TEST_OBJECT) stats.o
 	$(CC) $(CFLAGS) -o $@ $(TEST_OBJECT) stats.o

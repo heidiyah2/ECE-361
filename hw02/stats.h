@@ -3,13 +3,35 @@
 
 #include <stdio.h>
 
-// Uses helper functions to find and print min, max, sum, and mean of temp array, takes temps array of float values and num_readings (count of valid lines, assumes positive count), returns nothing.
+/*
+ * Takes an array of temperatures and the number of readings to process.
+ * Finds and prints the minimum, maximum, and mean temperature. Returns
+ * nothing.
+ *
+ * Assumes temps contains at least num_readings elements, num_readings is
+ * greater than zero, and temps is non-NULL.
+ */
 void stats_temp(const float temps[], int num_readings);
 
-// Same as stats_temp but takes humidity array instead and print statement is tailored to humidity values.
+/*
+ * Takes an array of humidity values and the number of readings to process.
+ * Finds and prints the minimum, maximum, and mean humidity. Returns nothing.
+ *
+ * Assumes hums contains at least num_readings elements, num_readings is
+ * greater than zero, and hums is non-NULL.
+ */
 void stats_hum(const float hums[], int num_readings);
 
-// Finds longest run of consecutive readings above the threshold (arg of main), expects temps array, ticks array, total count of valid lines (num_readings, pos #), and the threshold (2nd arg from main, pos #).
+/*
+ * Takes parallel arrays of temperatures and tick counts, the number of
+ * readings to process, and a temperature threshold. Finds and prints the
+ * longest consecutive run of temperatures above the threshold, including the
+ * tick at the beginning and end of the run when one exists. Returns nothing.
+ *
+ * Assumes temps and ticks each contain at least num_readings elements,
+ * num_readings is non-negative, and both arrays are non-NULL when
+ * num_readings is greater than zero.
+ */
 void stats_temp_threshold(const float temps[], const int ticks[], int num_readings, float threshold);
 
 #endif
