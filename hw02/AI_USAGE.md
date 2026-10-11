@@ -15,3 +15,7 @@ Issue: During the recursive-function work, Copilot initially tried to separate t
 ## Gemini
 
 I used Gemini for general tips on how to refactor a program, reviewing scope, and summarizing common methods of incrementing recursive functions.
+
+## Claudian
+
+I used Claudian to help me understand what the bonus problem meant by "best value" and "tail call". 

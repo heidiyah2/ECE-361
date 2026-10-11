@@ -34,4 +34,8 @@ void stats_hum(const float hums[], int num_readings);
  */
 void stats_temp_threshold(const float temps[], const int ticks[], int num_readings, float threshold);
 
+/*--------------------- for bonus problem-------------------*/
+// alternate version of static stats_max that makes recursion a tail call, preventing each call from stacking frames on the stack, instead each call behaves in memory as a normal function call would. Expects the same inputs as stats_temp/hum, returns float best_value (pos #).
+float stats_max_tail(const float a[], int n);
+
 #endif

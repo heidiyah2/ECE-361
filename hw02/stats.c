@@ -69,3 +69,23 @@ void stats_temp_threshold(const float temps[], const int ticks[], int num_readin
         printf("above %.1f C: longest run %d readings, from tick %d to tick %d\n",
                threshold, best, ticks[best_start], ticks[best_start + best - 1]);
 }
+
+/*---------------------- bonus problem ------------------------*/
+// recursive helper that carries best_value w/ current maximum
+static float stats_max_tail_helper(const float a[], int n, float best_value) {
+    
+    best_value = a[0] > best_value ? a[0] : best_value;
+    if (n == 1)
+        return best_value;
+
+    return stats_max_tail_helper(a + 1, n - 1, best_value);
+}
+
+// recursive maximum w/ helper that carries best value (tail call optimization)
+float stats_max_tail(const float a[], int n) {
+    float best_value = a[0];
+
+    best_value = stats_max_tail_helper(a, n, best_value);
+
+    return best_value;
+}

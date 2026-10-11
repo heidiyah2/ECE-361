@@ -62,6 +62,14 @@ int main(int argc, char *argv[]) {
     stats_hum(hums, num_readings);
     stats_temp_threshold(temps, ticks, num_readings, threshold);
 
+    // bonus problem
+    float bonus_max_temp = stats_max_tail(temps, num_readings);
+    float bonus_max_hum = stats_max_tail(hums, num_readings);
+
+    // to compare recursions run: ./readings < data/normal.txt | grep -E "temperature:|humidity:|max comparison" 
+    printf("max comparison: temperature %.1f, humidity %.1f\n",
+           bonus_max_temp, bonus_max_hum);
+
 //---------------- histogram -----------------------------
     histogram(temps, num_readings);
 
