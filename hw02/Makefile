@@ -17,9 +17,8 @@ stats.o: stats.c stats.h
 histogram.o: histogram.c histogram.h
 
 test: readings tests/test_stats
-	./tests/test_stats; unit_status=$$?; \
-	sh regress.sh; regression_status=$$?; \
-	test $$unit_status -eq 0 && test $$regression_status -eq 0
+	./tests/test_stats
+	sh regress.sh
 
 tests/test_stats: $(TEST_OBJECT) stats.o
 	$(CC) $(CFLAGS) -o $@ $(TEST_OBJECT) stats.o
