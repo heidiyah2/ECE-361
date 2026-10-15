@@ -1,2 +1,4 @@
 *.o
 hw02/build_run_commands.txt
+readings
+depth-o*
