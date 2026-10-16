@@ -95,10 +95,41 @@ static void test_minmax(void)
           "minmax with NULL max returns -1, min unchanged");
 }
 
+static void test_find_above(void)
+{
+    const float values[] = {1.0f, 5.0f, 2.0f, 8.0f};
+    const float negative[] = {-5.0f, -1.0f, 3.0f};
+
+    check(find_above(values, 4, 4.0f) == values + 1,
+          "find_above with two matches returns the first");
+
+    check(find_above(values, 4, 10.0f) == NULL,
+          "find_above with no match returns NULL");
+
+    check(find_above(values, 4, 8.0f) == NULL,
+          "find_above with a value equal to the threshold returns NULL");
+
+    check(find_above(values, 4, 0.0f) == values,
+          "find_above with a match at the first element");
+
+    check(find_above(values, 4, 7.0f) == values + 3,
+          "find_above with a match at the last element");
+
+    check(find_above(negative, 3, -2.0f) == negative + 1,
+          "find_above with a negative threshold");
+
+    check(find_above(values, 0, 0.0f) == NULL,
+          "find_above with n = 0 returns NULL");
+
+    check(find_above(NULL, 4, 0.0f) == NULL,
+          "find_above with NULL a returns NULL");
+}
+
 int main(void)
 {
     test_swap_float();
     test_minmax();
+    test_find_above();
 
     printf("Summary: %d tests, %d failed\n", tests_run, failures);
     return failures == 0 ? 0 : 1;
