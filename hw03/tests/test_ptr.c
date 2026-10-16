@@ -21,6 +21,16 @@ static void check(int passed, const char *name)
     }
 }
 
+/* Returns 1 if a[0..n-1] and b[0..n-1] hold the same values, 0 otherwise. */
+static int same_values(const float *a, const float *b, int n)
+{
+    for (const float *p = a, *q = b; p < a + n; p++, q++) {
+        if (*p != *q)
+            return 0;
+    }
+    return 1;
+}
+
 static void test_swap_float(void)
 {
     float x = 1.5f;
@@ -125,11 +135,50 @@ static void test_find_above(void)
           "find_above with NULL a returns NULL");
 }
 
+static void test_reverse(void)
+{
+    float even[] = {1.0f, 2.0f, 3.0f, 4.0f};
+    const float even_reversed[] = {4.0f, 3.0f, 2.0f, 1.0f};
+    float odd[] = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
+    const float odd_reversed[] = {5.0f, 4.0f, 3.0f, 2.0f, 1.0f};
+    float descending[] = {4.0f, 3.0f, 2.0f, 1.0f};
+    const float descending_reversed[] = {1.0f, 2.0f, 3.0f, 4.0f};
+    float two[] = {1.0f, 2.0f};
+    const float two_reversed[] = {2.0f, 1.0f};
+    float one[] = {7.0f};
+    float untouched[] = {1.0f, 2.0f, 3.0f};
+    const float untouched_original[] = {1.0f, 2.0f, 3.0f};
+
+    reverse(even, 4);
+    check(same_values(even, even_reversed, 4), "reverse on an even length");
+
+    reverse(odd, 5);
+    check(same_values(odd, odd_reversed, 5), "reverse on an odd length");
+
+    reverse(descending, 4);
+    check(same_values(descending, descending_reversed, 4),
+          "reverse on values already in descending order");
+
+    reverse(two, 2);
+    check(same_values(two, two_reversed, 2), "reverse on two values");
+
+    reverse(one, 1);
+    check(one[0] == 7.0f, "reverse on one value does nothing");
+
+    reverse(untouched, 0);
+    check(same_values(untouched, untouched_original, 3),
+          "reverse with n = 0 does nothing");
+
+    reverse(NULL, 4);
+    check(1, "reverse with NULL a does not crash");
+}
+
 int main(void)
 {
     test_swap_float();
     test_minmax();
     test_find_above();
+    test_reverse();
 
     printf("Summary: %d tests, %d failed\n", tests_run, failures);
     return failures == 0 ? 0 : 1;
