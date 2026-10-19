@@ -1,4 +1,4 @@
-CC = cc
+CC = gcc
 CFLAGS = -std=c11 -Wall -Wextra -g -fsanitize=address,undefined
 
 TEST_OBJECT = tests/test_ptr.o
