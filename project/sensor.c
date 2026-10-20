@@ -7,7 +7,7 @@
 int sensor_read(uint32_t *base, float *temp_c, float *rh_pct) {
     int rc;
     
-    // read temp
+    // read temp & humidity
     uint32_t raw_temp = iom361_readReg(base, TEMP_REG, &rc);
     if (rc != 0)
         return rc;
