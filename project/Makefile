@@ -1,5 +1,6 @@
 CC = gcc
 CFLAGS = -std=c11
+LDLIBS = -lm
 
 SOURCES = main.c aux.c fsm.c iom361_r4.c report.c sensor.c store.c
 OBJECTS = $(SOURCES:.c=.o)
@@ -9,7 +10,7 @@ OBJECTS = $(SOURCES:.c=.o)
 all: dishwasher
 
 dishwasher: $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

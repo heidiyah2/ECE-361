@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include "iom361_r4.h"
+#include "sensor.h"
 
 int main(void) {
     printf("Device Name: Dishwasher\n");
