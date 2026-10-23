@@ -44,3 +44,10 @@ int tally_count(const tally_t *t, const char *name) {
     }
     return 0;
 }
+
+int tally_size(const tally_t *t) {
+    if (t == NULL) {
+        return 0;
+    }
+    return t->num_names;
+}
