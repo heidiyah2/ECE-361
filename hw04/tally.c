@@ -26,4 +26,11 @@ tally_t *tally_create(void) {
     return NULL;
 }
 
+void tally_destroy(tally_t *t) {
+    if (t == NULL) {
+        return;
+    }
+    t->in_use = false; // t points to pool[i] and selects in_use
+}
+
 
