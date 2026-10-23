@@ -33,4 +33,14 @@ void tally_destroy(tally_t *t) {
     t->in_use = false; // t points to pool[i] and selects in_use
 }
 
-
+int tally_count(const tally_t *t, const char *name) {
+    if (t == NULL || name == NULL) {
+        return 0;
+    }
+    for (int i = 0; i < t->num_names; i++) {
+        if (strcmp(name, t->entries[i].name) == 0) {
+            return t->entries[i].count;
+        }
+    }
+    return 0;
+}

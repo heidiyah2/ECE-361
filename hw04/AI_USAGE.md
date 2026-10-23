@@ -1,6 +1,7 @@
 ## Claude
 
-
+- To check each function in tally.c after I wrote it.
+- 
 
 Issue: It incorrectly said it was "safer" to reset `num_names` in `tally_create` than `tally_destroy` because of the wording of the function description, when in this case either would work.
 
