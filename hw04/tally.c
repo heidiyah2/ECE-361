@@ -51,3 +51,33 @@ int tally_size(const tally_t *t) {
     }
     return t->num_names;
 }
+
+int tally_add(tally_t *t, const char *name) {
+    // basic checks
+    if (t == NULL || name == NULL || strlen(name) == 0 || strlen(name) > TALLY_LEN) {
+        return -1;
+    }
+    // find match or insert spot
+    int insert = t->num_names;
+    for (int i = 0; i < t->num_names; i++) {
+        if (strcmp(name, t->entries[i].name) == 0) {
+            return ++t->entries[i].count;
+        }
+        if (strcmp(name, t->entries[i].name) < 0) {
+            insert = i;
+            break;
+        }
+    }
+    // check if tally is full
+    if (t->num_names == TALLY_NAMES) {
+        return -1;
+    }
+    // shift names and insert new name
+    for (int j = t->num_names; j > insert; j--) {
+        t->entries[j] = t->entries[j - 1];
+    }
+    strcpy(t->entries[insert].name, name);
+    t->entries[insert].count = 1;
+    t->num_names++;
+    return 1;
+}
