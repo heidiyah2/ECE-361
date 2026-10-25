@@ -21,9 +21,11 @@ int main(void) {
             }
         }
         if (strcmp(line,"") == 0) {
+            skipped++;
             continue;
         }
         if (line[0] == '#') {
+            skipped++;
             continue;
         }
         int add = tally_add(t, line);

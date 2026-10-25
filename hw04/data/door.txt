@@ -1,0 +1,9 @@
+# Names to put into tally
+car
+door
+
+car
+window
+windowwindowwindowwindowwindow
+door
+door
