@@ -81,3 +81,12 @@ int tally_add(tally_t *t, const char *name) {
     t->num_names++;
     return 1;
 }
+
+void tally_print(const tally_t *t, FILE *out) {
+    if (t == NULL || out == NULL) {
+        return;
+    }
+    for (int i = 0; i < t->num_names; i++) {
+        fprintf(out, "%s %d\n", t->entries[i].name, t->entries[i].count);
+    }
+}
