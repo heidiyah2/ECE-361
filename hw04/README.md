@@ -42,3 +42,16 @@ make clean
 ```
 
 This removes `events.o`, `tally.o`, `tests/test_tally.o`, `events`, and `tests/test_tally`.
+
+## Opaque Type Test
+
+Compiler message: 
+```
+events.c: In function ‘main’:
+events.c:34:19: error: invalid use of incomplete typedef ‘tally_t’ {aka ‘struct tally’}
+   34 |     printf("%d", t->num_names);
+      |                   ^~
+make: *** [<builtin>: events.o] Error 1
+```
+
+The opaque type prevents events.c from breaking the operation of the structure and functions in tally.c, for example changing num_names so that it is not accurate to the contents of the tally or rearranging the order of the names. This is useful because events.c does not rely on the inner workings of the structure and the compiler enforces it, so that the structure could be changed but the interaction with it stays the same.

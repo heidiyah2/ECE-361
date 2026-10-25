@@ -32,7 +32,6 @@ int main(void) {
         }
     }
     tally_print(t, stdout);
-
     fprintf(stdout, "names: %d, lines skipped: %d\n", tally_size(t), skipped);
 
     return 0;

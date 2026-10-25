@@ -4,6 +4,7 @@ hw02/readings
 hw02/tests/test_stats
 hw02/tests/depth-o*
 hw03/tests/test_ptr
+hw04/CLAUDE.md
 hw04/events
 hw04/tests/test_tally
 project/dishwasher
