@@ -3,11 +3,18 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <time.h>
 #include "iom361_r4.h"
 
 /*-----------------------------------------------------
 * Sensor module interacts with the humidity and temperature sensors.
 * -----------------------------------------------------*/
+
+typedef struct reading {
+    time_t timestamp;
+    float temp_c;
+    float rh_pct;
+} reading_t;
 
 /* Reads TEMP_REG and HUMID_REG of iom361, converts them (rounded to 0.1) as follows: 
 * TEMP_REG: deg C = ST / 2^20 * 200 - 50, where ST is a 20-bit raw value. 
