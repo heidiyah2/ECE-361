@@ -26,3 +26,21 @@ const transition_t lock_table[N_STATES][N_EVENTS] = {
         [E_TIMEOUT] = { .next = LOCKED,  .action = A_LOCK }
     }
 };
+
+state_t lock_step(state_t s, event_t e, action_t *action) {
+    if (s >= N_STATES || e >= N_EVENTS || s < 0 || e < 0) {
+        if (action != NULL) {
+            *action = A_UNDEFINED;
+        }
+        return LOCKED;
+    }
+
+    transition_t t = lock_table[s][e];
+
+    if (action == NULL) {
+        return t.next;
+    }
+    
+    *action = t.action;
+    return t.next;
+}
