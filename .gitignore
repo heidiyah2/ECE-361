@@ -7,6 +7,9 @@ hw03/tests/test_ptr
 hw04/CLAUDE.md
 hw04/events
 hw04/tests/test_tally
+hw05/CLAUDE.md
+hw05/lock
+hw05/tests/test_lock
 project/dishwasher
 project/CLAUDE.md
 practice/
