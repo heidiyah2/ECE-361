@@ -27,6 +27,8 @@ const transition_t lock_table[N_STATES][N_EVENTS] = {
     }
 };
 
+static const char code[] = "314";
+
 state_t lock_step(state_t s, event_t e, action_t *action) {
     if (s >= N_STATES || e >= N_EVENTS || s < 0 || e < 0) {
         if (action != NULL) {
@@ -40,7 +42,23 @@ state_t lock_step(state_t s, event_t e, action_t *action) {
     if (action == NULL) {
         return t.next;
     }
-    
+
     *action = t.action;
     return t.next;
+}
+
+int lock_event(state_t s, char c) {
+    if (s >= N_STATES || s < 0) {
+        return -1;
+    }
+    if (c == 'c') {
+        return E_CLOSE;
+    }
+    if (c == 't') {
+        return E_TIMEOUT;
+    }
+    if (c >= '0' && c <= '9') {
+        return c == code[s] ? E_RIGHT : E_WRONG;
+    }
+    return -1;
 }
