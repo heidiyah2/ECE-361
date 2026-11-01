@@ -1,4 +1,5 @@
 #include "../lock.h"
+#include <string.h>
 
 static int passed = 0;
 static int failed = 0;
@@ -132,6 +133,18 @@ static void test_sequences(void) {
     check(run("3 1\n4", &a) == OPEN, "sequence: spaces and newlines are skipped");
 }
 
+static void test_names(void) {
+    check(strcmp(state_name(LOCKED), "LOCKED") == 0, "names: state LOCKED");
+    check(strcmp(state_name(N_STATES), "?") == 0, "names: state out of range is ?");
+    check(strcmp(state_name((state_t)-1), "?") == 0, "names: state -1 is ?");
+    check(strcmp(event_name(E_RIGHT), "RIGHT") == 0, "names: event RIGHT");
+    check(strcmp(event_name(N_EVENTS), "?") == 0, "names: event out of range is ?");
+    check(strcmp(event_name((event_t)-1), "?") == 0, "names: event -1 is ?");
+    check(strcmp(action_name(A_BEEP), "BEEP") == 0, "names: action BEEP");
+    check(strcmp(action_name(N_ACTIONS), "?") == 0, "names: action out of range is ?");
+    check(strcmp(action_name((action_t)-1), "?") == 0, "names: action -1 is ?");
+}
+
 int main(void) {
     test_table_entries();
     test_table_complete();
@@ -139,6 +152,7 @@ int main(void) {
     test_event_digits();
     test_event_other_chars();
     test_sequences();
+    test_names();
 
     printf("\n%d passed, %d failed\n", passed, failed);
     return failed == 0 ? 0 : 1;

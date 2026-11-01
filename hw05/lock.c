@@ -28,6 +28,25 @@ const transition_t lock_table[N_STATES][N_EVENTS] = {
 };
 
 static const char code[] = "314";
+static const char *state_names[N_STATES] = {
+    [LOCKED] = "LOCKED",
+    [GOT1]   = "GOT1",
+    [GOT2]   = "GOT2",
+    [OPEN]   = "OPEN"
+};
+static const char *event_names[N_EVENTS] = {
+    [E_RIGHT]   = "RIGHT",
+    [E_WRONG]   = "WRONG",
+    [E_CLOSE]   = "CLOSE",
+    [E_TIMEOUT] = "TIMEOUT"
+};
+static const char *action_names[N_ACTIONS] = {
+    [A_UNDEFINED] = "UNDEFINED",
+    [A_NONE]      = "NONE",
+    [A_UNLOCK]    = "UNLOCK",
+    [A_LOCK]      = "LOCK",
+    [A_BEEP]      = "BEEP"
+};
 
 state_t lock_step(state_t s, event_t e, action_t *action) {
     if (s >= N_STATES || e >= N_EVENTS || s < 0 || e < 0) {
@@ -61,4 +80,25 @@ int lock_event(state_t s, char c) {
         return c == code[s] ? E_RIGHT : E_WRONG;
     }
     return -1;
+}
+
+const char *state_name(state_t s) {
+    if (s >= N_STATES || s < 0) {
+        return "?";
+    }
+    return state_names[s];
+}
+
+const char *event_name(event_t e) {
+    if (e >= N_EVENTS || e < 0) {
+        return "?";
+    }
+    return event_names[e];
+}
+
+const char *action_name(action_t a) {
+    if (a >= N_ACTIONS || a < 0) {
+        return "?";
+    }
+    return action_names[a];
 }
