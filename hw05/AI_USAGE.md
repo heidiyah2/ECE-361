@@ -2,6 +2,7 @@
 
 - To check each function after I wrote it.
 - To write tests and Makefile.
-- To write README build and test instructions only.
+- To help plan out main.c.
+- To write README build and test instructions, and create markdown table based on existing lock_table from lock.c. 
 
-Issue: 
+Issue: In this homework there was no mistake or issue Claude made that I could detect. 
