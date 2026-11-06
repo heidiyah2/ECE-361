@@ -1,8 +1,6 @@
 #include <math.h>
 #include "sensor.h"
-
-#define TEMP_REG 0x0C
-#define HUMID_REG 0x10
+#include "iom361_r4.h"
 
 int sensor_read(uint32_t *base, time_t now, reading_t *r) {
     int rc, bits_wanted = 20;
