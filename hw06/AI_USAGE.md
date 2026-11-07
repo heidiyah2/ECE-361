@@ -9,3 +9,4 @@ HW 6:
 - Planning main.c and writing sections using time (my first time using this).
 - Writing tests, regress.sh, and desired scenarios
 - Updating .gitignore
+- Creating README and writing portion on how to build and test

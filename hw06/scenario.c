@@ -23,7 +23,6 @@ int scenario_load(const char *path, scenario_t *s) {
 
     while (fgets(buf, sizeof buf, file) != NULL) {
         counter++; // first so blank lines and comments are counted
-        // check if end of file
         if (strchr(buf, '\n') == NULL && !feof(file)) {
             result = counter;
             break;
