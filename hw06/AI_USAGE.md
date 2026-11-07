@@ -7,4 +7,5 @@ HW 6:
 - Help with understanding the scenario module and writing functions for scenario.c.
 - Write Makefile and create empty files and folders.
 - Planning main.c and writing sections using time (my first time using this).
-- Writing tests and regress.sh
+- Writing tests, regress.sh, and desired scenarios
+- Updating .gitignore

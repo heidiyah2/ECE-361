@@ -1,0 +1,12 @@
+# switches.txt: a press, a hold, a release, two switches at once,
+# and a second press that turns an LED back off. Also checks that
+# the sensor rounds to 0.1 and that 91.0 C reads back as 91.0.
+start 1791273600                # 2026-10-06 08:00:00 UTC
+# tick  temp    rh      switches
+0       21.5    40.0    0x0
+2       21.5    40.0    0x1     # switch 0 pressed: LED 0 on
+5       22.04   41.96   0x0     # released, LED 0 stays on; rounds to 22.0 / 42.0
+6       91.0    40.0    0xA     # switches 1 and 3 pressed together
+7       91.0    40.0    0x0     # released
+8       20.0    40.0    0x1     # switch 0 pressed again: LED 0 off
+9       20.0    40.0    0x0

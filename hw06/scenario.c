@@ -36,7 +36,6 @@ int scenario_load(const char *path, scenario_t *s) {
         if (strspn(buf, " \t\r\n") == strlen(buf))
             continue;
 
-        // 
         int end = 0;
 
         if (!seen_start) {
