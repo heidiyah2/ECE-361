@@ -9,6 +9,7 @@ typedef struct istack istack_t;         /* opaque */
 
 /* returns pointer to new, empty stack with room for ISTACK_START values; NULL if memory runs out (and nothing leaked). */
 istack_t *istack_create(void);
+/* frees the stack and everything it holds, inside out; NULL does nothing. */
 void      istack_destroy(istack_t *s);
 int       istack_push(istack_t *s, int v);
 int       istack_pop(istack_t *s, int *v);

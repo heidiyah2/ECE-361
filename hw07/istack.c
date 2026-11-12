@@ -13,14 +13,28 @@ struct istack {
 
 istack_t *istack_create(void)
 {
-    /* TODO */
-    return NULL;
+    istack_t *s = malloc(sizeof *s);
+    // ALWAYS check
+    if (s == NULL) {
+        return NULL;
+    }
+    // allocate data[]
+    s->data = malloc(ISTACK_START * sizeof *s->data);
+    // check!
+    if (s->data == NULL) {
+        free(s);    // have to free s or we have memory leak
+        return NULL;
+    }
+    s->count = 0;
+    s->cap = ISTACK_START;
+    return s;
 }
 
 void istack_destroy(istack_t *s)
 {
-    (void)s;
-    /* TODO */
+    if (s == NULL) return;
+    free(s->data);      // the inside first
+    free(s);            // then the struct
 }
 
 int istack_push(istack_t *s, int v)
