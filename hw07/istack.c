@@ -80,31 +80,51 @@ int istack_peek(const istack_t *s, int *v)
 
 size_t istack_count(const istack_t *s)
 {
-    (void)s;
-    /* TODO */
-    return 0;
+    if (s == NULL) {
+        return 0;
+    }
+    return s->count;
 }
 
 bool istack_is_empty(const istack_t *s)
 {
-    (void)s;
-    /* TODO */
-    return true;
+    if (s == NULL || s->count == 0) {
+        return true;
+    }
+    return false;
 }
 
 size_t istack_capacity(const istack_t *s)
 {
-    (void)s;
-    /* TODO */
-    return 0;
+    if (s == NULL) {
+        return 0;
+    }
+    return s->cap;
 }
 
 int *istack_to_array(const istack_t *s, size_t *n)
 {
-    (void)s;
-    /* TODO */
-    if (n != NULL) {
-        *n = 0;
+    if (s == NULL || s->count == 0) {
+        if (n != NULL) {
+            *n = 0;
+        }
+        return NULL;
     }
-    return NULL;
+    // create array
+    int *a = malloc(s->count * sizeof *s->data);
+    if (a == NULL) {
+        if (n != NULL) {
+            *n = 0;
+        }
+        return NULL;
+    }
+    // copy values into array (bottom first)
+    for (size_t i = 0; i < s->count; i++) {
+        a[i] = s->data[i];
+    }
+    // update n
+    if (n != NULL) {
+        *n = s->count;
+    }
+    return a;
 }
