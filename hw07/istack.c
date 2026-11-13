@@ -60,18 +60,22 @@ int istack_push(istack_t *s, int v)
 
 int istack_pop(istack_t *s, int *v)
 {
-    (void)s;
-    (void)v;
-    /* TODO */
-    return -1;
+    if (istack_peek(s, v) != 0) 
+        return -1;
+    --s->count;
+    return 0;
 }
 
 int istack_peek(const istack_t *s, int *v)
 {
-    (void)s;
-    (void)v;
-    /* TODO */
-    return -1;
+    if (s == NULL || s->count == 0) {   // count access after NULL check, safe
+        return -1;
+    }
+    size_t top = s->count - 1;  // data contains 0..count-1
+    if (v != NULL) {
+        *v = s->data[top];
+    }
+    return 0;
 }
 
 size_t istack_count(const istack_t *s)
