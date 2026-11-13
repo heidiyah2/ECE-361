@@ -11,6 +11,7 @@ typedef struct istack istack_t;         /* opaque */
 istack_t *istack_create(void);
 /* frees the stack and everything it holds, inside out; NULL does nothing. */
 void      istack_destroy(istack_t *s);
+/* pushed v; if the stack is full, first doubles the room with realloc. Returns 0, or -1 if s is NULL or memory runs out: then the stack is unchanged. Assumes s points to created stack, and count and cap are accurate to contents and size of stack. */
 int       istack_push(istack_t *s, int v);
 int       istack_pop(istack_t *s, int *v);
 int       istack_peek(const istack_t *s, int *v);

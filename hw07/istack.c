@@ -39,10 +39,23 @@ void istack_destroy(istack_t *s)
 
 int istack_push(istack_t *s, int v)
 {
-    (void)s;
-    (void)v;
-    /* TODO */
-    return -1;
+    if (s == NULL) {
+        return -1;
+    }
+    // check if stack is full, double if needed
+    if (s->count == s->cap) {
+        size_t double_cap = 2 * s->cap;
+        int *d = realloc(s->data, double_cap * sizeof *s->data);
+        if (d == NULL) {
+            return -1;
+        }
+        // safe to update now
+        s->data = d;
+        s->cap = double_cap;
+    }
+    s->data[s->count] = v;
+    ++s->count;
+    return 0;
 }
 
 int istack_pop(istack_t *s, int *v)
