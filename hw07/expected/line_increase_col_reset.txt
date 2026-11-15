@@ -1,0 +1,2 @@
+line 3, column 7: found ']', expected '}'
+exit status 1

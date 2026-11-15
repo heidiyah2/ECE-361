@@ -1,0 +1,4 @@
+int main(void) {
+    int a[2] = {1, 2};   /* brackets (in comments) count */
+    return a[0];
+}
