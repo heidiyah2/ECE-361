@@ -18,3 +18,7 @@ Operation and reactions:
 - WASH runs for 240 ticks, during which the heater turns on below $53.0^\circ\mathrm{C}$, off above $55.0^\circ\mathrm{C}$.
 - DRY runs the fan until $40$% RH or at most 600 ticks.
 - DONE returns to IDLE when door opens.
+
+
+### Rules and Decisions:
+1. If two records with the same timestamp occur, both will be kept and stored in order of arrival.
