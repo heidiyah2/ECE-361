@@ -34,6 +34,6 @@ int record_compare(const record_t *a, const record_t *b);
 int find_by_key(store_t *s);
 int store_count(store_t *s);
 int store_height(store_t *s);
-int in_order_walk(store_t *s);
+int store_walk(store_t *s);
 
 #endif

@@ -87,7 +87,7 @@ int store_height(store_t *s) {
     return 0;
 }
 
-int in_order_walk(store_t *s) {
+int store_walk(store_t *s) {
     (void)s; /* TODO */
     return 0;
 }

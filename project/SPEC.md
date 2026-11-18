@@ -21,4 +21,11 @@ Operation and reactions:
 
 
 ### Rules and Decisions:
+Record Keeping:
 1. If two records with the same timestamp occur, both will be kept and stored in order of arrival.
+
+Heater:
+1. At the beginning of the WASH cycle, the temperature will be measured to determine if the heater should be on or not, so that if the water is already above $55.0^\circ\mathrm{C}$ when WASH starts, the heater will stay off.
+
+Pause:
+1. The event of the door opening/closing while in a state triggers a pause action, which freezes the timer and remembers the state of things.
