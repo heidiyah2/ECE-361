@@ -12,24 +12,39 @@ struct node {
    struct node *rightChild;
 };
 
-/* replaces the original's global `struct node *root`; each tree has its own */
 struct bst {
    struct node *root;
    size_t size;                         /* number of keys */
 };
 
-/* new: the original's root started as NULL at file scope */
 bst_t *bst_create(void) {
-   return NULL;                         /* TODO */
+   bst_t *t = malloc(sizeof *t);
+   if (t == NULL) {
+      return NULL;
+   }
+   // make tree empty
+   t->root = NULL;
+   t->size = 0;
+   return t;
 }
 
-/* new: the original never frees */
+/* helper function to bst_destroy */
+static void destroy(struct node *n) {  // recursive
+   if (n == NULL)             // base case
+      return;
+   destroy(n->leftChild);
+   destroy(n->rightChild);
+   free(n);
+}
+
 void bst_destroy(bst_t *t) {
-   (void)t;                             /* TODO */
+   if (t == NULL) {
+      return;                 // does nothing
+   }
+   destroy(t->root);
+   free(t);
 }
 
-/* from insert(): root is now t->root; added the NULL t and malloc checks and
- * the size count, otherwise the original's loop */
 int bst_insert(bst_t *t, int key) {
    if (t == NULL)
       return -1;
@@ -82,8 +97,6 @@ int bst_insert(bst_t *t, int key) {
    return 0;
 }
 
-/* from search(): ported faithfully, loop and all; the printf of each node
- * became a visit count. NOT YET FIXED (Part 2) */
 bool bst_contains(const bst_t *t, int key, size_t *visits) {
    if (visits != NULL)
       *visits = 0;
@@ -124,13 +137,11 @@ bool bst_contains(const bst_t *t, int key, size_t *visits) {
    return true;
 }
 
-/* new */
 size_t bst_size(const bst_t *t) {
    (void)t;                             /* TODO */
    return 0;
 }
 
-/* new */
 size_t bst_height(const bst_t *t) {
    (void)t;                             /* TODO */
    return 0;
