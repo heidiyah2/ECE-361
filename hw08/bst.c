@@ -138,8 +138,9 @@ bool bst_contains(const bst_t *t, int key, size_t *visits) {
 }
 
 size_t bst_size(const bst_t *t) {
-   (void)t;                             /* TODO */
-   return 0;
+   if (t == NULL)
+      return 0;
+   return t->size;
 }
 
 size_t bst_height(const bst_t *t) {
