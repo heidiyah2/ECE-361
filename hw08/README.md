@@ -94,15 +94,15 @@ Keys 1 to 1023 in increasing order:
 
 ```sh
 $ seq 1 1023 | ./treestats
-
+n 1023, height 1023
 ```
 
 Keys 1 to 1023 in a shuffled order:
 
 ```sh
 $ seq 1 1023 | sort -R | ./treestats
-
+n 1023, height 23
 ```
 
-What insertion order does to the height, and so to the number of visits a search can take:
+What insertion order does to the height, and number of visits a search can take: Insertion order affects the height because the first entry becomes the root and subsequent entries are further down the tree, so that an in-order insertion can result in a one-sided tree that's really like a linked list and a shuffled insert is more balanced. A search has a maximum equal to the depth of the tree, so insertion order also affects how long a search takes as is evident by the sorted vs shuffled tests above.
 

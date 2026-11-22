@@ -16,6 +16,7 @@ struct bst {
    size_t size;                         /* number of keys */
 };
 
+/* new: replaces the original's global root, which started as NULL */
 bst_t *bst_create(void) {
    bst_t *t = malloc(sizeof *t);
    if (t == NULL) {
@@ -27,7 +28,7 @@ bst_t *bst_create(void) {
    return t;
 }
 
-/* helper function to bst_destroy */
+/* new (the original never frees): helper function to bst_destroy */
 static void destroy(struct node *n) {  // recursive
    if (n == NULL)             // base case
       return;
@@ -36,6 +37,7 @@ static void destroy(struct node *n) {  // recursive
    free(n);
 }
 
+/* new: the original never frees */
 void bst_destroy(bst_t *t) {
    if (t == NULL) {
       return;                 // does nothing
@@ -44,6 +46,7 @@ void bst_destroy(bst_t *t) {
    free(t);
 }
 
+/* from insert() */
 int bst_insert(bst_t *t, int key) {
    if (t == NULL)
       return -1;
@@ -95,6 +98,7 @@ int bst_insert(bst_t *t, int key) {
    return 0;
 }
 
+/* from search() */
 bool bst_contains(const bst_t *t, int key, size_t *visits) {
    if (visits != NULL)
       *visits = 0;
@@ -139,13 +143,14 @@ bool bst_contains(const bst_t *t, int key, size_t *visits) {
    return true;
 }
 
+/* new */
 size_t bst_size(const bst_t *t) {
    if (t == NULL)
       return 0;
    return t->size;
 }
 
-/* helper function for bst_height, recursive */
+/* new: helper function for bst_height, recursive */
 static size_t height(const struct node *n) {
    // base case, no node
    if (n == NULL)
@@ -155,6 +160,7 @@ static size_t height(const struct node *n) {
    return 1 + (left > right ? left : right);
 }
 
+/* new */
 size_t bst_height(const bst_t *t) {
    if (t == NULL) 
       return 0;
