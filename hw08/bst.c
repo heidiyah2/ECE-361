@@ -5,12 +5,12 @@
 #include "bst.h"
 
 /* from BinarySearchTree.c: one node of the tree */
-struct node {
+typedef struct node {
    int data;
 
    struct node *leftChild;
    struct node *rightChild;
-};
+} node_t;
 
 struct bst {
    struct node *root;
@@ -29,7 +29,7 @@ bst_t *bst_create(void) {
 }
 
 /* helper function to bst_destroy */
-static void destroy(struct node *n) {  // recursive
+static void destroy(node_t *n) {  // recursive
    if (n == NULL)             // base case
       return;
    destroy(n->leftChild);
@@ -114,16 +114,16 @@ bool bst_contains(const bst_t *t, int key, size_t *visits) {
 
       // data @ current node > data we are looking for
       // so we need to traverse the path where data < data current node
-      //go to left tree
+      // go to left tree
       if(current->data > data) {
          current = current->leftChild;
       }
-      //else go to right tree
+      // else go to right tree
       else {
          current = current->rightChild;
       }
 
-      //not found
+      // not found
       if(current == NULL) {
          if (visits != NULL)
             *visits = count;
@@ -143,7 +143,18 @@ size_t bst_size(const bst_t *t) {
    return t->size;
 }
 
+/* helper function for bst_height, recursive */
+static size_t height(const node_t *n) {
+   // base case, no node
+   if (n == NULL)
+      return 0;
+   size_t left = height(n->leftChild);
+   size_t right = height(n->rightChild);
+   return 1 + (left > right ? left : right);
+}
+
 size_t bst_height(const bst_t *t) {
-   (void)t;                             /* TODO */
-   return 0;
+   if (t == NULL) 
+      return 0;
+   return height(t->root);
 }
