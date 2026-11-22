@@ -78,15 +78,15 @@ This removes the `.o` files, `treestats`, and `tests/test_bst`.
 
 ## Part 2: The crash
 
-The test that triggers it:
+The test that triggers it: `test_empty_search`
 
 The first line of the `make memcheck` report:
 
 ```sh
-
+bst.c:111:17: runtime error: member access within null pointer of type 'struct node'
 ```
 
-Why the original never noticed:
+Why the original never noticed: The root itself is never checked if it's NULL but nodes are, so for a main that inserts values into the tree like the original did (there's no empty tree) the issue is never seen.
 
 ## Part 3: What order does to a tree
 

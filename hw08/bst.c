@@ -10,7 +10,7 @@ typedef struct node {
 
    struct node *leftChild;
    struct node *rightChild;
-} node_t;
+};
 
 struct bst {
    struct node *root;
@@ -29,7 +29,7 @@ bst_t *bst_create(void) {
 }
 
 /* helper function to bst_destroy */
-static void destroy(node_t *n) {  // recursive
+static void destroy(struct node *n) {  // recursive
    if (n == NULL)             // base case
       return;
    destroy(n->leftChild);
@@ -144,7 +144,7 @@ size_t bst_size(const bst_t *t) {
 }
 
 /* helper function for bst_height, recursive */
-static size_t height(const node_t *n) {
+static size_t height(const struct node *n) {
    // base case, no node
    if (n == NULL)
       return 0;
