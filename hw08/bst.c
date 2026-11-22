@@ -5,9 +5,8 @@
 #include "bst.h"
 
 /* from BinarySearchTree.c: one node of the tree */
-typedef struct node {
+struct node {
    int data;
-
    struct node *leftChild;
    struct node *rightChild;
 };
@@ -106,6 +105,11 @@ bool bst_contains(const bst_t *t, int key, size_t *visits) {
    int data = key;
    size_t count = 0;
    struct node *current = t->root;
+
+   /* the fix (Part 2): an empty tree has no root to compare, so the loop
+    * below would read current->data through NULL. *visits is already 0 */
+   if (current == NULL)
+      return false;
 
    /* original from BinarySearchTree.c without printing */
    while(current->data != data) {
