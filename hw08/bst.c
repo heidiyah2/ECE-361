@@ -65,7 +65,6 @@ int bst_insert(bst_t *t, int key) {
       t->root = tempNode;
    } else {
       current = t->root;
-      parent = NULL;
 
       while(1) {
          parent = current;
@@ -113,8 +112,7 @@ bool bst_contains(const bst_t *t, int key, size_t *visits) {
 
    /* original from BinarySearchTree.c without printing */
    while(current->data != data) {
-      if(current != NULL)
-         count++;                       /* was: printf("%d ",current->data); */
+      count++;                       /* was: printf("%d ",current->data); */
 
       // data @ current node > data we are looking for
       // so we need to traverse the path where data < data current node
