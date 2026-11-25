@@ -20,8 +20,8 @@ all: dishwasher
 dishwasher: main.o $(MODULE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
 
-# Each test program = its own .c file + all the modules
-tests/test_%: tests/test_%.o $(MODULE_OBJS)
+# Each test program = its own .c file + the shared check() helper + all the modules
+tests/test_%: tests/test_%.o tests/check.o $(MODULE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
 
 # -I. lets tests/*.c write #include "store.h" for headers in project/
@@ -38,16 +38,17 @@ report.o: report.c report.h
 sensor.o: sensor.c sensor.h iom361_r4.h
 store.o:  store.c store.h sensor.h iom361_r4.h fsm.h
 
-tests/test_sensor.o: tests/test_sensor.c sensor.h iom361_r4.h
-tests/test_fsm.o:    tests/test_fsm.c fsm.h
-tests/test_store.o:  tests/test_store.c store.h sensor.h iom361_r4.h fsm.h
-tests/test_aux.o:    tests/test_aux.c aux.h
-tests/test_report.o: tests/test_report.c report.h
+tests/check.o:       tests/check.c tests/check.h
+tests/test_sensor.o: tests/test_sensor.c tests/check.h sensor.h iom361_r4.h
+tests/test_fsm.o:    tests/test_fsm.c tests/check.h fsm.h
+tests/test_store.o:  tests/test_store.c tests/check.h store.h sensor.h iom361_r4.h fsm.h
+tests/test_aux.o:    tests/test_aux.c tests/check.h aux.h
+tests/test_report.o: tests/test_report.c tests/check.h report.h
 
-# Builds dishwasher and every test, then runs each test.
-# TODO: scenario tests, and the final passed/failed summary line.
+# Builds dishwasher and every test, runs them, and ends with one line:
+# "make test: N passed, M failed". TODO: add the scenario tests.
 test: dishwasher $(TESTS)
-	@for t in $(TESTS); do ./$$t; done
+	@sh tests/run_tests.sh $(TESTS)
 
 clean:
 	rm -f dishwasher main.o $(MODULE_OBJS) $(TESTS) tests/*.o

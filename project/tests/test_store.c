@@ -1,7 +1,8 @@
 /* Unit tests for the store module. */
+#include "check.h"
 #include "store.h"
 
 int main(void) {
     /* TODO: tests */
-    return 0;
+    return check_done();
 }
