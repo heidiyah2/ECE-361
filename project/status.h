@@ -1,0 +1,12 @@
+#ifndef STATUS_H
+#define STATUS_H
+
+#include <stdio.h>
+#include <stdint.h>
+
+void print_binary(uint32_t x, int width);
+uint32_t get_field(uint32_t word, int pos, int width);
+uint32_t set_field(uint32_t word, int pos, int width, uint32_t value);
+int32_t sign_extend(uint32_t value, int width);
+
+#endif

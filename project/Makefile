@@ -4,11 +4,11 @@ CFLAGS = -std=c11 -Wall -Wextra -g -fsanitize=address,undefined
 LDLIBS = -lm
 
 # Every module except main.c; the program and every test link these.
-MODULES = aux.c fsm.c iom361_r4.c report.c sensor.c store.c
+MODULES = aux.c fsm.c iom361_r4.c report.c sensor.c status.c store.c
 MODULE_OBJS = $(MODULES:.c=.o)
 
 # One unit-test program per module, in tests/
-TESTS = tests/test_sensor tests/test_fsm tests/test_store tests/test_aux tests/test_report
+TESTS = tests/test_sensor tests/test_fsm tests/test_store tests/test_aux tests/test_report tests/test_status
 
 .PHONY: all test clean
 # Keep tests/*.o (make deletes "intermediate" files by default), so an
@@ -36,6 +36,7 @@ fsm.o:    fsm.c fsm.h
 iom361_r4.o: iom361_r4.c iom361_r4.h
 report.o: report.c report.h
 sensor.o: sensor.c sensor.h iom361_r4.h
+status.o: status.c status.h
 store.o:  store.c store.h sensor.h iom361_r4.h fsm.h
 
 tests/check.o:       tests/check.c tests/check.h
@@ -44,6 +45,7 @@ tests/test_fsm.o:    tests/test_fsm.c tests/check.h fsm.h
 tests/test_store.o:  tests/test_store.c tests/check.h store.h sensor.h iom361_r4.h fsm.h
 tests/test_aux.o:    tests/test_aux.c tests/check.h aux.h
 tests/test_report.o: tests/test_report.c tests/check.h report.h
+tests/test_status.o: tests/test_status.c tests/check.h status.h
 
 # Builds dishwasher and every test, runs them, and ends with one line:
 # "make test: N passed, M failed". TODO: add the scenario tests.

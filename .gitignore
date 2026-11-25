@@ -30,3 +30,4 @@ project/tests/test_store
 project/tests/test_aux
 project/tests/test_report
 project/TODO.md
+project/tests/test_status
