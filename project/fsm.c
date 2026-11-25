@@ -1,8 +1,9 @@
+#include <stdio.h>
 #include "fsm.h"
 
 /* One cell of the transition table: where to go, and what to do on the way. */
 typedef struct transition {
-    state_t next_state;
+    state_t next;
     action_t action;
 } transition_t;
 
@@ -66,3 +67,18 @@ static const transition_t fsm_table[N_STATES][N_EVENTS] = {
         [E_TEMP_HIGH]    = { DONE, A_NONE },
     },
 };
+
+state_t next_state(state_t s, event_t e, action_t *action) {
+    if (s >= N_STATES || e >= N_EVENTS || s < 0 || e < 0) {
+        if (action != NULL)
+            *action = A_UNDEFINED;
+        return IDLE;
+    }
+    transition_t t = fsm_table[s][e];
+
+    if (action == NULL) {
+        return t.next;
+    }
+    *action = t.action;
+    return t.next;
+}

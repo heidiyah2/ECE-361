@@ -1,8 +1,7 @@
 #include <math.h>
 #include "sensor.h"
 
-#define TEMP_REG 0x0C
-#define HUMID_REG 0x10
+// defined in iom361_r4.h: TEMP_REG 0x0C and HUMID_REG 0x10
 
 int sensor_read(uint32_t *base, float *temp_c, float *rh_pct) {
     int rc;

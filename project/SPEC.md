@@ -13,7 +13,6 @@
 Operation and reactions:
 - START with...
     - door closed begins PREWASH cycle.
-    - door open remains in IDLE unless previously paused (resumes where it left off).
 - PREWASH runs for 90 ticks.
 - WASH runs for 240 ticks, during which the heater turns on below $53.0^\circ\mathrm{C}$, off above $55.0^\circ\mathrm{C}$.
 - DRY runs the fan until $40$% RH or at most 600 ticks.
@@ -29,3 +28,6 @@ Heater:
 
 Pause:
 1. The event of the door opening/closing while in a state triggers a pause action, which freezes the timer and remembers the state of things.
+
+Random (sort later):
+- Code that turns a reading and switch register into events lives in fsm module.
