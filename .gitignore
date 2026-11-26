@@ -24,10 +24,4 @@ hw08/tests/test_bst
 project/dishwasher
 project/CLAUDE.md
 practice/
-project/tests/test_sensor
-project/tests/test_fsm
-project/tests/test_store
-project/tests/test_aux
-project/tests/test_report
 project/TODO.md
-project/tests/test_status
