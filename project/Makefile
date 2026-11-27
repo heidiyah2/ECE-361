@@ -32,20 +32,20 @@ tests/test_%: tests/test_%.o tests/check.o $(MODULE_OBJS)
 # through another header. Update these whenever an #include changes.
 main.o:   main.c sensor.h iom361_r4.h
 aux.o:    aux.c aux.h
-fsm.o:    fsm.c fsm.h
+fsm.o:    fsm.c fsm.h sensor.h iom361_r4.h
 iom361_r4.o: iom361_r4.c iom361_r4.h
 report.o: report.c report.h
 sensor.o: sensor.c sensor.h iom361_r4.h
-status.o: status.c status.h fsm.h
+status.o: status.c status.h fsm.h sensor.h iom361_r4.h
 store.o:  store.c store.h sensor.h iom361_r4.h fsm.h
 
 tests/check.o:       tests/check.c tests/check.h
 tests/test_sensor.o: tests/test_sensor.c tests/check.h sensor.h iom361_r4.h
-tests/test_fsm.o:    tests/test_fsm.c tests/check.h fsm.h
+tests/test_fsm.o:    tests/test_fsm.c tests/check.h fsm.h sensor.h iom361_r4.h
 tests/test_store.o:  tests/test_store.c tests/check.h store.h sensor.h iom361_r4.h fsm.h
 tests/test_aux.o:    tests/test_aux.c tests/check.h aux.h
 tests/test_report.o: tests/test_report.c tests/check.h report.h
-tests/test_status.o: tests/test_status.c tests/check.h status.h fsm.h
+tests/test_status.o: tests/test_status.c tests/check.h status.h fsm.h sensor.h iom361_r4.h
 
 # Builds dishwasher and every test, runs them, and ends with one line:
 # "make test: N passed, M failed". TODO: add the scenario tests.
