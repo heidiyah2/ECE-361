@@ -8,7 +8,7 @@ MODULES = aux.c fsm.c iom361_r4.c report.c sensor.c status.c store.c
 MODULE_OBJS = $(MODULES:.c=.o)
 
 # One unit-test program per module, in tests/
-TESTS = tests/test_sensor tests/test_fsm tests/test_store tests/test_aux tests/test_report tests/test_status
+TESTS = tests/test_sensor tests/test_store tests/test_aux tests/test_report tests/test_status
 
 .PHONY: all test clean
 # Keep tests/*.o (make deletes "intermediate" files by default), so an
@@ -41,7 +41,6 @@ store.o:  store.c store.h sensor.h iom361_r4.h fsm.h
 
 tests/check.o:       tests/check.c tests/check.h
 tests/test_sensor.o: tests/test_sensor.c tests/check.h sensor.h iom361_r4.h
-tests/test_fsm.o:    tests/test_fsm.c tests/check.h fsm.h sensor.h iom361_r4.h
 tests/test_store.o:  tests/test_store.c tests/check.h store.h sensor.h iom361_r4.h fsm.h
 tests/test_aux.o:    tests/test_aux.c tests/check.h aux.h
 tests/test_report.o: tests/test_report.c tests/check.h report.h

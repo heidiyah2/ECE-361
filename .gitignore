@@ -26,3 +26,5 @@ project/CLAUDE.md
 practice/
 project/TODO.md
 project/.vscode/
+project/tests/test_*
+!project/tests/test_*.c
