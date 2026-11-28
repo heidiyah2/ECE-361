@@ -21,6 +21,10 @@ Operation and reactions:
 
 
 ### Rules and Decisions:
+Clock:
+1. Has it's own module so unit tests can reach it, and main is not cluttered.
+Answer to question from handout "what would happen to your device on 19 January 2038 if time_t were 32 bits?": This is the same issue with Y2K, there would likely be an integer overflow and time would roll over to 1901, but signed overflow is undefined behavior so who knows depending on the system. We will need to update systems before 2038.
+
 Record Keeping:
 1. If two records with the same timestamp occur, both will be kept and stored in order of arrival.
 

@@ -4,11 +4,11 @@ CFLAGS = -std=c11 -Wall -Wextra -g -fsanitize=address,undefined
 LDLIBS = -lm
 
 # Every module except main.c; the program and every test link these.
-MODULES = aux.c fsm.c iom361_r4.c report.c sensor.c status.c store.c
+MODULES = aux.c clock.c fsm.c iom361_r4.c report.c sensor.c status.c store.c
 MODULE_OBJS = $(MODULES:.c=.o)
 
 # One unit-test program per module, in tests/
-TESTS = tests/test_sensor tests/test_store tests/test_aux tests/test_report tests/test_status
+TESTS = tests/test_sensor tests/test_store tests/test_aux tests/test_report tests/test_status tests/test_clock
 
 .PHONY: all test clean
 # Keep tests/*.o (make deletes "intermediate" files by default), so an
@@ -32,6 +32,7 @@ tests/test_%: tests/test_%.o tests/check.o $(MODULE_OBJS)
 # through another header. Update these whenever an #include changes.
 main.o:   main.c sensor.h iom361_r4.h
 aux.o:    aux.c aux.h
+clock.o:  clock.c clock.h
 fsm.o:    fsm.c fsm.h sensor.h iom361_r4.h
 iom361_r4.o: iom361_r4.c iom361_r4.h
 report.o: report.c report.h
@@ -45,6 +46,7 @@ tests/test_store.o:  tests/test_store.c tests/check.h store.h sensor.h iom361_r4
 tests/test_aux.o:    tests/test_aux.c tests/check.h aux.h
 tests/test_report.o: tests/test_report.c tests/check.h report.h
 tests/test_status.o: tests/test_status.c tests/check.h status.h fsm.h sensor.h iom361_r4.h
+tests/test_clock.o:  tests/test_clock.c tests/check.h clock.h
 
 # Builds dishwasher and every test, runs them, and ends with one line:
 # "make test: N passed, M failed". TODO: add the scenario tests.
